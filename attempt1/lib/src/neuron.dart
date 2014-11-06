@@ -1,7 +1,7 @@
 part of nnn;
 
 abstract class Neuron {
-  List<Neuron> destinations = [];
+  List<Neuron> outputs = [];
   List<Neuron> inputs = [];
   bool _willFire = false;
   bool _firing = false;
@@ -19,6 +19,11 @@ abstract class Neuron {
   }
   
   bool nextCycle();
+  
+  void connect(Neuron output) {
+    outputs.add(output);
+    output.inputs.add(this);
+  }
 }
 
 class InputNeuron extends Neuron {

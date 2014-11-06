@@ -12,7 +12,7 @@ class NeuralNetwork {
     }
   }
   
-  int countFiring() {
+  int firingCount() {
     int count = 0;
     for (var neuron in neurons) {
       if (neuron.firing) {
