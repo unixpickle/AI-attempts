@@ -1,6 +1,5 @@
 #include "scoped-pass.hpp"
-#include "../src/link.hpp"
-#include "../src/or-neuron.hpp"
+#include <nnn1>
 #include <cassert>
 
 using namespace nnn1;

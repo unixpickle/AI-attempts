@@ -4,7 +4,7 @@ SOURCES=$(wildcard ../src/*.cpp)
 TEST_SOURCES=$(wildcard *.cpp)
 OBJECTS=$(SOURCES:../src/%.cpp=build/objects/%.o)
 TESTS=$(TEST_SOURCES:%.cpp=build/%)
-CXXFLAGS += -std=c++11
+CXXFLAGS += -std=c++11 -I../include
 
 all: $(OBJECTS) $(TESTS)
 

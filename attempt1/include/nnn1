@@ -1,0 +1,5 @@
+#include "../src/network.hpp"
+#include "../src/or-neuron.hpp"
+#include "../src/and-neuron.hpp"
+#include "../src/xor-neuron.hpp"
+#include "../src/link.hpp"

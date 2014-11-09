@@ -4,6 +4,7 @@
 namespace nnn1 {
 
 class Link;
+class Network;
 
 class Neuron {
 public:
@@ -60,6 +61,10 @@ protected:
   
   bool isFiring = false;
   bool willFire = false;
+  
+  friend class Network;
+  Neuron * nextNeuron = nullptr;
+  Neuron * lastNeuron = nullptr;
 };
 
 }
