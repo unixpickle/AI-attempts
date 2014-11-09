@@ -1,6 +1,14 @@
 #include "network.hpp"
 
 namespace nnn1 {
+  
+Network::~Network() {
+  while (firstNeuron) {
+    Neuron * next = firstNeuron->nextNeuron;
+    delete firstNeuron;
+    firstNeuron = next;
+  }
+}
 
 void Network::AddNeuron(Neuron & neuron) {
   neuron.nextNeuron = firstNeuron;
@@ -28,10 +36,8 @@ void Network::Cycle() {
   // Fire away!
   neuron = firstNeuron;
   while (neuron) {
-    if (neuron->willFire) {
-      neuron->Fire();
-      neuron->willFire = false;
-    }
+    neuron->isFiring = neuron->willFire;
+    neuron->willFire = false;
     neuron = neuron->nextNeuron;
   }
 }

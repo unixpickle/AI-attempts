@@ -11,6 +11,11 @@ namespace nnn1 {
 class Network {
 public:
   /**
+   * Deallocate a network and delete all its Neurons and their links.
+   */
+  ~Network();
+  
+  /**
    * Add a neuron.
    */
   void AddNeuron(Neuron &);

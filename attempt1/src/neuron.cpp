@@ -4,6 +4,12 @@
 namespace nnn1 {
 
 Neuron::~Neuron() {
+  while (firstInput) {
+    firstInput->Remove();
+  }
+  while (firstOutput) {
+    firstOutput->Remove();
+  }
 }
 
 Neuron::Neuron() {
