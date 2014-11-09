@@ -24,7 +24,7 @@ When the neural network experiences pain, neurons and links which fired more rec
 
 ### Creation and linking of neurons
 
-Periodically, new random neurons will be generated and added to the network. These neurons will have several semi-randomly links.  The more recently a neuron has fired, the more likely it is to be one of these links' inputs or outputs.
+Periodically, new random neurons will be generated and added to the network. These neurons will have several semi-random links.  The more recently a neuron has fired, the more likely it is to be one of these links' inputs or outputs.
 
 ### Hebbian learning
 

@@ -3,7 +3,7 @@
 
 namespace nnn1 {
 
-bool RandomBoolWithProbability(double probability) {
+bool RandomBool(double probability) {
   if (probability >= 1.0) {
     return true;
   }

@@ -3,3 +3,5 @@
 #include "../src/and-neuron.hpp"
 #include "../src/xor-neuron.hpp"
 #include "../src/link.hpp"
+#include "../src/evolver.hpp"
+#include "../src/random.hpp"
