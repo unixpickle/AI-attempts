@@ -1,4 +1,5 @@
 #include "network.hpp"
+#include "link.hpp"
 
 namespace nnn1 {
   
@@ -27,6 +28,8 @@ void Network::RemoveNeuron(Neuron & neuron) {
 }
 
 void Network::Cycle() {
+  ++cycleCount;
+  
   // Record which neurons will fire on the next cycle
   Neuron * neuron = firstNeuron;
   while (neuron) {
@@ -36,6 +39,19 @@ void Network::Cycle() {
   // Fire away!
   neuron = firstNeuron;
   while (neuron) {
+    if (neuron->willFire) {
+      // The neuron is being fired during this cycle.
+      neuron->GetLifeStatus().SetLastUsed(cycleCount);
+    }
+    if (neuron->isFiring) {
+      // The neuron was fired during the last cycle, so all its outputs should
+      // be updated accordingly.
+      Link * link = neuron->firstOutput;
+      while (link) {
+        link->GetLifeStatus().SetLastUsed(cycleCount - 1);
+        link = link->GetSenderNext();
+      }
+    }
     neuron->isFiring = neuron->willFire;
     neuron->willFire = false;
     neuron = neuron->nextNeuron;
@@ -43,7 +59,7 @@ void Network::Cycle() {
 }
 
 unsigned int Network::CountFiring() {
-  int count = 0;
+  unsigned int count = 0;
   Neuron * neuron = firstNeuron;
   while (neuron) {
     if (neuron->IsFiring()) {
@@ -52,6 +68,19 @@ unsigned int Network::CountFiring() {
     neuron = neuron->nextNeuron;
   }
   return count;
+}
+
+void Network::UpdateLivesWithPain(double intensity) {
+  Neuron * neuron = firstNeuron;
+  while (neuron) {
+    neuron->GetLifeStatus().UpdateNetPain(cycleCount, intensity);
+    Link * link = neuron->firstOutput;
+    while (link) {
+      link->GetLifeStatus().UpdateNetPain(cycleCount, intensity);
+      link = link->GetSenderNext();
+    }
+    neuron = neuron->nextNeuron;
+  }
 }
 
 }

@@ -1,6 +1,8 @@
 #ifndef __NNN1_NEURON_HPP__
 #define __NNN1_NEURON_HPP__
 
+#include "life-status.hpp"
+
 namespace nnn1 {
 
 class Link;
@@ -12,7 +14,15 @@ public:
   Neuron & operator=(const Neuron &) = delete;
   
   Neuron();
+  
+  /**
+   * Removes all links in and out of this neuron.
+   */
   virtual ~Neuron();
+  
+  /**
+   * Returns the number of incoming messages during the current cycle.
+   */
   unsigned int CountMessages();
   
   /**
@@ -45,13 +55,42 @@ public:
   }
   
   /**
+   * Returns the status of this neuron's life.
+   */
+  inline LifeStatus & GetLifeStatus() {
+    return lifeStatus;
+  }
+  
+  /**
    * Based on internal state and [CountMessages], determine if this neuron
    * should fire on the next cycle.
    */
   virtual bool Cycle() = 0;
+  
+  /**
+   * Return the first output link on this neuron.
+   */
+  inline Link * GetFirstOutput() {
+    return firstOutput;
+  }
+  
+  /**
+   * Return the first input link on this neuron.
+   */
+  inline Link * GetFirstInput() {
+    return firstInput;
+  }
+  
+  /**
+   * Return the next neuron in the network.
+   */
+  inline Neuron * GetNextNeuron() {
+    return nextNeuron;
+  }
 
 protected:
   friend class Link;
+  friend class Network;
   
   Link * firstOutput = nullptr;
   Link * firstInput = nullptr;
@@ -62,7 +101,8 @@ protected:
   bool isFiring = false;
   bool willFire = false;
   
-  friend class Network;
+  LifeStatus lifeStatus;
+  
   Neuron * nextNeuron = nullptr;
   Neuron * lastNeuron = nullptr;
 };

@@ -54,6 +54,13 @@ public:
     return receiverNext;
   }
   
+  /**
+   * Get the status of this link's life.
+   */
+  inline LifeStatus & GetLifeStatus() {
+    return lifeStatus;
+  }
+  
 private:
   Link(Neuron & sender, Neuron & receiver);
   
@@ -61,6 +68,8 @@ private:
   Neuron & receiver;
   Link * senderNext, * senderLast = nullptr;
   Link * receiverNext, * receiverLast = nullptr;
+  
+  LifeStatus lifeStatus;
 };
 
 }

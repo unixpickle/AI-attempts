@@ -35,8 +35,32 @@ public:
    */
   unsigned int CountFiring();
   
+  /**
+   * Get the number of neural cycles that this network has performed.
+   */
+  inline unsigned long long GetCycleCount() {
+    return cycleCount;
+  }
+  
+  /**
+   * Get the first neuron in the network.
+   */
+  inline Neuron * GetFirstNeuron() {
+    return firstNeuron;
+  }
+  
+  /**
+   * Modify all neurons and links to reflect pain of a given [intensity].
+   *
+   * A negative [intensity] is interpreted as pleasure and can be used for
+   * positive reinforcement.
+   */
+  void UpdateLivesWithPain(double intensity);
+  
 private:
   Neuron * firstNeuron = nullptr;
+  
+  unsigned long long cycleCount = 0;
 };
 
 }
