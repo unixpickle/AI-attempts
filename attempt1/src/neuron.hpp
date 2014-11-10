@@ -33,6 +33,13 @@ public:
   }
   
   /**
+   * Prevent this neuron from firing during the current cycle.
+   */
+  inline void Inhibit() {
+    isFiring = false;
+  }
+  
+  /**
    * Returns `true` if and only if the neuron is firing during the current
    * cycle.
    */

@@ -59,23 +59,26 @@ void Evolver::Grow() {
   network.AddNeuron(*neuron);
   Neuron * neurons[3];
   RandomNeurons(neurons, inputCount + outputCount);
-  Link::Create(*neurons[0], *neuron);
-  Link::Create(*neuron, *neurons[1]);
+  Link::Create(*neurons[0], *neuron)->GetLifeStatus().SetPermanent(false);
+  Link::Create(*neuron, *neurons[1])->GetLifeStatus().SetPermanent(false);
   if (outputCount == 2) {
-    Link::Create(*neuron, *neurons[2]);
+    Link::Create(*neuron, *neurons[2])->GetLifeStatus().SetPermanent(false);
   }
 }
 
 Neuron * Evolver::GenerateNeuron() {
   // Basically, this is just an unweighted random neuron factory.
   unsigned int num = RandomNumber(3);
+  Neuron * result = nullptr;
   if (num == 0) {
-    return new XorNeuron();
+    result = new XorNeuron();
   } else if (num == 1) {
-    return new AndNeuron();
+    result = new AndNeuron();
   } else {
-    return new OrNeuron();
+    result = new OrNeuron();
   }
+  result->GetLifeStatus().SetPermanent(false);
+  return result;
 }
 
 void Evolver::RandomNeurons(Neuron ** output, unsigned int count) {
