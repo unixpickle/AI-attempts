@@ -14,6 +14,7 @@ Network::~Network() {
 void Network::AddNeuron(Neuron & neuron) {
   neuron.nextNeuron = firstNeuron;
   firstNeuron = &neuron;
+  ++neuronCount;
 }
 
 void Network::RemoveNeuron(Neuron & neuron) {
@@ -25,6 +26,7 @@ void Network::RemoveNeuron(Neuron & neuron) {
   if (neuron.nextNeuron) {
     neuron.nextNeuron->lastNeuron = neuron.lastNeuron;
   }
+  --neuronCount;
 }
 
 void Network::Cycle() {

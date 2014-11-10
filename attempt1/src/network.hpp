@@ -43,6 +43,13 @@ public:
   }
   
   /**
+   * Get the number of neurons in the network.
+   */
+  inline unsigned int GetNeuronCount() {
+    return neuronCount;
+  }
+  
+  /**
    * Get the first neuron in the network.
    */
   inline Neuron * GetFirstNeuron() {
@@ -61,6 +68,7 @@ private:
   Neuron * firstNeuron = nullptr;
   
   unsigned long long cycleCount = 0;
+  unsigned int neuronCount = 0;
 };
 
 }

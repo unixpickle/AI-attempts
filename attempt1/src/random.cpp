@@ -14,4 +14,8 @@ double RandomDouble() {
   return (double)rand() / (double)RAND_MAX;
 }
 
+unsigned int RandomNumber(unsigned int max) {
+  return rand() % max;
+}
+
 }
