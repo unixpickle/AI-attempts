@@ -2,3 +2,6 @@
 packages
 build
 pubspec.lock
+Cargo.lock
+target
+
