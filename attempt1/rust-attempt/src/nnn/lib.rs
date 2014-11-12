@@ -1,2 +1,3 @@
-pub mod link;
-pub mod neuron;
+extern crate libc;
+
+pub mod network;
