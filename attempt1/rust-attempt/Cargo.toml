@@ -8,3 +8,4 @@ authors = [ "Alex Nichol <unixpickle@gmail.com>" ]
 
 name = "nnn"
 path = "src/nnn/lib.rs"
+test = true
