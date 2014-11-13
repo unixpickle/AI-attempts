@@ -5,7 +5,7 @@ type Link struct {
 	output *Neuron
 }
 
-func NewLink(input *Neuron, output *Neuron) *Link {
+func NewLink(output *Neuron, input *Neuron) *Link {
 	result := &Link{input, output}
 	input.outputs = append(input.outputs, result)
 	output.inputs = append(output.inputs, result)
@@ -13,15 +13,16 @@ func NewLink(input *Neuron, output *Neuron) *Link {
 }
 
 func (self *Link) Remove() {
-	removeFromList(&self.input.outputs)
-	removeFromList(&self.output.inputs)
+	self.removeFromList(&self.input.outputs)
+	self.removeFromList(&self.output.inputs)
 }
 
 func (self *Link) removeFromList(list *[]*Link) {
-	for i, x := range list {
+	for i, x := range *list {
 		if x == self {
-			list[i] = list[len(list)-1]
-			*list = list[0 : len(list)-1]
+			(*list)[i] = (*list)[len(*list)-1]
+			*list = (*list)[0 : len(*list)-1]
+			break
 		}
 	}
 }

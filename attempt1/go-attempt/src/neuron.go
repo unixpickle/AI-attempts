@@ -14,10 +14,26 @@ type Neuron struct {
 	function int
 }
 
+func NewNeuron(function int) *Neuron {
+	return &Neuron{[]*Link{}, []*Link{}, false, false, function}
+}
+
+func NewOrNeuron() *Neuron {
+	return NewNeuron(NEURON_OR);
+}
+
+func NewAndNeuron() *Neuron {
+	return NewNeuron(NEURON_AND);
+}
+
+func NewXorNeuron() *Neuron {
+	return NewNeuron(NEURON_XOR);
+}
+
 func (self *Neuron) InputCount() int {
 	count := 0
-	for input := range self.inputs {
-		if input.firing {
+	for _, link := range self.inputs {
+		if link.output.firing {
 			count++
 		}
 	}
@@ -29,18 +45,28 @@ func (self *Neuron) NextCycle() bool {
 	case NEURON_XOR:
 		return self.InputCount()%2 != 0
 	case NEURON_AND:
-		for input := range self.inputs {
-			if !input.firing {
+		for _, link := range self.inputs {
+			if !link.output.firing {
 				return false
 			}
 		}
 		return true
 	case NEURON_OR:
-		for input := range self.inputs {
-			if input.firing {
+		for _, link := range self.inputs {
+			if link.output.firing {
 				return true
 			}
 		}
 		return false
+	}
+	return false
+}
+
+func (self *Neuron) RemoveLinks() {
+	for len(self.inputs) > 0 {
+		self.inputs[0].Remove()
+	}
+	for len(self.outputs) > 0 {
+		self.outputs[0].Remove()
 	}
 }
