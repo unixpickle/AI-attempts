@@ -1,8 +1,8 @@
 package nnn
 
 type Network struct {
-	neurons    []*Neuron
-	time       CycleTime
+	Neurons    []*Neuron
+	Time       CycleTime
 }
 
 func NewNetwork() *Network {
@@ -10,30 +10,30 @@ func NewNetwork() *Network {
 }
 
 func (self *Network) AddNeuron(neuron *Neuron) {
-	self.neurons = append(self.neurons, neuron)
+	self.Neurons = append(self.Neurons, neuron)
 }
 
 func (self *Network) RemoveNeuron(neuron *Neuron) {
-	for i, x := range self.neurons {
+	for i, x := range self.Neurons {
 		if x == neuron {
-			self.neurons[i] = self.neurons[len(self.neurons)-1]
-			self.neurons = self.neurons[0 : len(self.neurons)-1]
+			self.Neurons[i] = self.Neurons[len(self.Neurons)-1]
+			self.Neurons = self.Neurons[0 : len(self.Neurons)-1]
 			break
 		}
 	}
 }
 
 func (self *Network) Cycle() {
-	self.time++
-	for _, neuron := range self.neurons {
+	self.Time++
+	for _, neuron := range self.Neurons {
 		neuron.willFire = neuron.NextCycle()
 	}
-	for _, neuron := range self.neurons {
-		neuron.firing = neuron.willFire
-		if neuron.firing {
-			neuron.lifetime.lastUsed = self.time
-			for _, output := range neuron.outputs {
-				output.lifetime.lastUsed = self.time
+	for _, neuron := range self.Neurons {
+		neuron.Firing = neuron.willFire
+		if neuron.Firing {
+			neuron.Life.LastUsed = self.Time
+			for _, output := range neuron.Outputs {
+				output.Life.LastUsed = self.Time
 			}
 		}
 	}
@@ -41,8 +41,8 @@ func (self *Network) Cycle() {
 
 func (self *Network) CountFiring() uint {
 	var count uint = 0
-	for _, x := range self.neurons {
-		if x.firing {
+	for _, x := range self.Neurons {
+		if x.Firing {
 			count++
 		}
 	}
@@ -50,9 +50,9 @@ func (self *Network) CountFiring() uint {
 }
 
 func (self *Network) GetNeuron(idx int) *Neuron {
-	return self.neurons[idx]
+	return self.Neurons[idx]
 }
 
 func (self *Network) CountNeurons() int {
-	return len(self.neurons)
+	return len(self.Neurons)
 }

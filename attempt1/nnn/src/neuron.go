@@ -7,12 +7,12 @@ const (
 )
 
 type Neuron struct {
-	inputs   []*Link
-	outputs  []*Link
-	firing   bool
+	Inputs   []*Link
+	Outputs  []*Link
+	Firing   bool
 	willFire bool
-	function int
-	lifetime Lifetime
+	Function int
+	Life     Lifetime
 }
 
 func NewNeuron(function int) *Neuron {
@@ -33,8 +33,8 @@ func NewXorNeuron() *Neuron {
 
 func (self *Neuron) InputCount() int {
 	count := 0
-	for _, link := range self.inputs {
-		if link.output.firing {
+	for _, link := range self.Inputs {
+		if link.Output.Firing {
 			count++
 		}
 	}
@@ -42,19 +42,19 @@ func (self *Neuron) InputCount() int {
 }
 
 func (self *Neuron) NextCycle() bool {
-	switch self.function {
+	switch self.Function {
 	case NEURON_XOR:
 		return self.InputCount()%2 != 0
 	case NEURON_AND:
-		for _, link := range self.inputs {
-			if !link.output.firing {
+		for _, link := range self.Inputs {
+			if !link.Output.Firing {
 				return false
 			}
 		}
 		return true
 	case NEURON_OR:
-		for _, link := range self.inputs {
-			if link.output.firing {
+		for _, link := range self.Inputs {
+			if link.Output.Firing {
 				return true
 			}
 		}
@@ -64,18 +64,18 @@ func (self *Neuron) NextCycle() bool {
 }
 
 func (self *Neuron) Fire() {
-	self.firing = true
+	self.Firing = true
 }
 
 func (self *Neuron) Inhibit() {
-	self.firing = false
+	self.Firing = false
 }
 
 func (self *Neuron) RemoveLinks() {
-	for len(self.inputs) > 0 {
-		self.inputs[0].Remove()
+	for len(self.Inputs) > 0 {
+		self.Inputs[0].Remove()
 	}
-	for len(self.outputs) > 0 {
-		self.outputs[0].Remove()
+	for len(self.Outputs) > 0 {
+		self.Outputs[0].Remove()
 	}
 }

@@ -1,22 +1,22 @@
 package nnn
 
 type Link struct {
-	input    *Neuron
-	output   *Neuron
-	lifetime Lifetime
-	netPain  float64
+	Input    *Neuron
+	Output   *Neuron
+	Life     Lifetime
+	NetPain  float64
 }
 
 func NewLink(sender *Neuron, receiver *Neuron) *Link {
 	result := &Link{receiver, sender, NewLifetime(), 0.0}
-	receiver.inputs = append(receiver.inputs, result)
-	sender.outputs = append(sender.outputs, result)
+	receiver.Inputs = append(receiver.Inputs, result)
+	sender.Outputs = append(sender.Outputs, result)
 	return result
 }
 
 func (self *Link) Remove() {
-	self.removeFromList(&self.input.outputs)
-	self.removeFromList(&self.output.inputs)
+	self.removeFromList(&self.Input.Outputs)
+	self.removeFromList(&self.Output.Inputs)
 }
 
 func (self *Link) removeFromList(list *[]*Link) {

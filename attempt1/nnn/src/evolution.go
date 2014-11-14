@@ -14,7 +14,7 @@ type weightedNeuron struct {
 // they fired, favoring more recent ones.
 func Recentness(network *Network) WeightFunc {
 	return func(neuron *Neuron) float64 {
-		delay := network.time - neuron.lifetime.lastUsed
+		delay := network.Time - neuron.Life.LastUsed
 		return 1.0 / float64(delay + 1)
 	}
 }
@@ -32,7 +32,7 @@ func RandomNeuron() *Neuron {
 	default:
 		result = NewXorNeuron()
 	}
-	result.lifetime.permanent = false
+	result.Life.Permanent = false
 	return result
 }
 
@@ -40,22 +40,22 @@ func RandomNeuron() *Neuron {
 // Both the inputs and the output will be chosen using WeightedChoose with the
 // specified linkWeight function. The created links will not be permanent.
 func Evolve(network *Network, linkWeight WeightFunc) *Neuron {
-	if len(network.neurons) < 2 {
+	if len(network.Neurons) < 2 {
 		return nil
 	}
 	
 	neuron := RandomNeuron()
-	if len(network.neurons) == 2 || rand.Intn(2) == 0 {
+	if len(network.Neurons) == 2 || rand.Intn(2) == 0 {
 		// One input, one output
 		conns := WeightedChoose(network, 2, linkWeight)
-		NewLink(conns[0], neuron).lifetime.permanent = false
-		NewLink(neuron, conns[1]).lifetime.permanent = false
+		NewLink(conns[0], neuron).Life.Permanent = false
+		NewLink(neuron, conns[1]).Life.Permanent = false
 	} else {
 		// Two inputs, one output
 		conns := WeightedChoose(network, 3, linkWeight)
-		NewLink(conns[0], neuron).lifetime.permanent = false
-		NewLink(conns[1], neuron).lifetime.permanent = false
-		NewLink(neuron, conns[2]).lifetime.permanent = false
+		NewLink(conns[0], neuron).Life.Permanent = false
+		NewLink(conns[1], neuron).Life.Permanent = false
+		NewLink(neuron, conns[2]).Life.Permanent = false
 	}
 	return neuron
 }
@@ -63,7 +63,7 @@ func Evolve(network *Network, linkWeight WeightFunc) *Neuron {
 // Choose a given number of neurons from the network using a probability
 // weighting function.
 func WeightedChoose(network *Network, count int, weight WeightFunc) []*Neuron {
-	if count > len(network.neurons) {
+	if count > len(network.Neurons) {
 		panic("Too many random neurons requested")
 	}
     // Get the initial weighted list
@@ -80,9 +80,9 @@ func WeightedChoose(network *Network, count int, weight WeightFunc) []*Neuron {
 
 func buildWeightedList(network *Network, weight WeightFunc) []weightedNeuron {
     // Generate a list of weighted neurons which we can use for randomness.
-	weighted := make([]weightedNeuron, len(network.neurons))
+	weighted := make([]weightedNeuron, len(network.Neurons))
 	var prior float64 = 0.0
-	for _, neuron := range network.neurons {
+	for _, neuron := range network.Neurons {
 		el := weightedNeuron{weight(neuron), prior, neuron}
 		prior += el.weight
 		weighted = append(weighted, el)

@@ -68,15 +68,15 @@ func createSimpleAdder() (*Network, map[string]*Neuron) {
 
 func runAdderFunction(t *testing.T, values map[string]bool) {
 	network, controls := createSimpleAdder()
-	controls["a0"].firing = values["a0"]
-	controls["b0"].firing = values["b0"]
-	controls["b1"].firing = values["b1"]
+	controls["a0"].Firing = values["a0"]
+	controls["b0"].Firing = values["b0"]
+	controls["b1"].Firing = values["b1"]
 	for i := 0; i < 3; i++ {
 		network.Cycle()
 	}
-	if controls["c0"].firing != values["c0"] {
+	if controls["c0"].Firing != values["c0"] {
 		t.Error("Unexpected c0 value:", values)
-	} else if controls["c1"].firing != values["c1"] {
+	} else if controls["c1"].Firing != values["c1"] {
 		t.Error("Unexpected c1 value:", values)
 	}
 	network.Cycle()

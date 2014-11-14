@@ -1,8 +1,8 @@
 package nnn
 
 type Lifetime struct {
-	permanent bool
-	lastUsed  CycleTime
+	Permanent bool
+	LastUsed  CycleTime
 }
 
 func NewLifetime() Lifetime {

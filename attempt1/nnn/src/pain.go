@@ -1,21 +1,21 @@
 package nnn
 
 func AddPain(network *Network, amount float64) {
-	for _, neuron := range network.neurons {
-		for _, link := range neuron.outputs {
-			elapsed := 1 + network.time - link.lifetime.lastUsed
+	for _, neuron := range network.Neurons {
+		for _, link := range neuron.Outputs {
+			elapsed := 1 + network.Time - link.Life.LastUsed
 			recentness := 1.0 / float64(elapsed)
-			link.netPain += recentness * amount
+			link.NetPain += recentness * amount
 		}
 	}
 }
 
 func Prune(network *Network) {
-	for _, neuron := range network.neurons {
-		for i := 0; i < len(neuron.outputs); i++ {
+	for _, neuron := range network.Neurons {
+		for i := 0; i < len(neuron.Outputs); i++ {
 			// TODO: use a better pruning function here with randomness
-			link := neuron.outputs[i]
-			if link.netPain > 1 && !link.lifetime.permanent {
+			link := neuron.Outputs[i]
+			if link.NetPain > 1 && !link.Life.Permanent {
 				link.Remove()
 				i--
 			}
@@ -27,9 +27,9 @@ func Prune(network *Network) {
 
 func removeUnlinked(network *Network) bool {
 	removed := false
-	for i := 0; i < len(network.neurons); i++ {
-		neuron := network.neurons[i]
-		if len(neuron.outputs) == 0 && !neuron.lifetime.permanent {
+	for i := 0; i < len(network.Neurons); i++ {
+		neuron := network.Neurons[i]
+		if len(neuron.Outputs) == 0 && !neuron.Life.Permanent {
 			removed = true
 			network.RemoveNeuron(neuron)
 			i--
