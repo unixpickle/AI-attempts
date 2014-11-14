@@ -30,3 +30,13 @@ func (self *Network) Cycle() {
 		self.neurons[i].firing = self.neurons[i].willFire
 	}
 }
+
+func (self *Network) CountFiring() uint {
+	var count uint = 0
+	for _, x := range self.neurons {
+		if x.firing {
+			count++
+		}
+	}
+	return count
+}

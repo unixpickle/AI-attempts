@@ -3,8 +3,18 @@ package nnn;
 import "testing"
 
 func TestAdditionCircuit(t *testing.T) {
-	adder, controls := createSimpleAdder()
-	// TODO: test them here
+	runAdderFunction(t, mapFromInput(0, 0, 0, 0, 0))
+	runAdderFunction(t, mapFromInput(0, 1, 0, 1, 0))
+	runAdderFunction(t, mapFromInput(0, 0, 1, 0, 1))
+	runAdderFunction(t, mapFromInput(0, 1, 1, 1, 1))
+	runAdderFunction(t, mapFromInput(1, 1, 0, 0, 1))
+	runAdderFunction(t, mapFromInput(1, 0, 1, 1, 1))
+	runAdderFunction(t, mapFromInput(1, 1, 1, 0, 0))
+}
+
+func mapFromInput(a, b0, b1, c0, c1 int) map[string]bool {
+	return map[string]bool{"a0": a != 0, "b0": b0 != 0, "b1": b1 != 0,
+	                       "c0": c0 != 0, "c1": c1 != 0}
 }
 
 func createSimpleAdder() (*Network, map[string]*Neuron) {
@@ -50,7 +60,22 @@ func createSimpleAdder() (*Network, map[string]*Neuron) {
 	result.AddNeuron(and0)
 	
 	controlMap := map[string]*Neuron{"a0": a0, "b0": b0, "b1": b1, "c0": c0,
-									 "c1": c1}
+	                                 "c1": c1}
 	
 	return result, controlMap
+}
+
+func runAdderFunction(t *testing.T, values map[string]bool) {
+	network, controls := createSimpleAdder()
+	controls["a0"].firing = values["a0"]
+	controls["b0"].firing = values["b0"]
+	controls["b1"].firing = values["b1"]
+	for i := 0; i < 3; i++ {
+		network.Cycle()
+	}
+	if controls["c0"].firing != values["c0"] {
+		t.Error("Unexpected c0 value:", values)
+	} else if controls["c1"].firing != values["c1"] {
+		t.Error("Unexpected c1 value:", values)
+	}
 }

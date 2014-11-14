@@ -62,6 +62,14 @@ func (self *Neuron) NextCycle() bool {
 	return false
 }
 
+func (self *Neuron) Fire() {
+	self.firing = true
+}
+
+func (self *Neuron) Inhibit() {
+	self.firing = false
+}
+
 func (self *Neuron) RemoveLinks() {
 	for len(self.inputs) > 0 {
 		self.inputs[0].Remove()

@@ -5,10 +5,10 @@ type Link struct {
 	output *Neuron
 }
 
-func NewLink(output *Neuron, input *Neuron) *Link {
-	result := &Link{input, output}
-	input.outputs = append(input.outputs, result)
-	output.inputs = append(output.inputs, result)
+func NewLink(sender *Neuron, receiver *Neuron) *Link {
+	result := &Link{receiver, sender}
+	receiver.inputs = append(receiver.inputs, result)
+	sender.outputs = append(sender.outputs, result)
 	return result
 }
 
