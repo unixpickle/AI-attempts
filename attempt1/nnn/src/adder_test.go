@@ -79,4 +79,8 @@ func runAdderFunction(t *testing.T, values map[string]bool) {
 	} else if controls["c1"].firing != values["c1"] {
 		t.Error("Unexpected c1 value:", values)
 	}
+	network.Cycle()
+	if network.CountFiring() > 0 {
+		t.Error("Neurons still firing after addition:", values)
+	}
 }

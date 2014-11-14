@@ -4,10 +4,11 @@ type Link struct {
 	input    *Neuron
 	output   *Neuron
 	lifetime Lifetime
+	netPain  float64
 }
 
 func NewLink(sender *Neuron, receiver *Neuron) *Link {
-	result := &Link{receiver, sender, NewLifetime()}
+	result := &Link{receiver, sender, NewLifetime(), 0.0}
 	receiver.inputs = append(receiver.inputs, result)
 	sender.outputs = append(sender.outputs, result)
 	return result
