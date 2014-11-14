@@ -8,7 +8,7 @@ type weightedNeuron struct {
 	neuron      *Neuron
 }
 
-func RandomSources(network *Network, requestedCount int,
+func RandomNeurons(network *Network, requestedCount int,
 		weightFunc func(*Neuron) float64) []*Neuron {
     // Get the initial weighted list
 	list := buildWeightedList(network, weightFunc)
