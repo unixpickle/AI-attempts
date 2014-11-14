@@ -15,13 +15,13 @@ func Prune(network *Network) {
 		for i := 0; i < len(neuron.outputs); i++ {
 			// TODO: use a better pruning function here with randomness
 			link := neuron.outputs[i]
-			if link.netPain > 1 {
+			if link.netPain > 1 && !link.lifetime.permanent {
 				link.Remove()
 				i--
 			}
 		}
 	}
-	// TODO: see if I need these {}
+	// TODO: see if I need these curly braces
 	for removeUnlinked(network) {}
 }
 
@@ -29,7 +29,7 @@ func removeUnlinked(network *Network) bool {
 	removed := false
 	for i := 0; i < len(network.neurons); i++ {
 		neuron := network.neurons[i]
-		if len(neuron.outputs) == 0 {
+		if len(neuron.outputs) == 0 && !neuron.lifetime.permanent {
 			removed = true
 			network.RemoveNeuron(neuron)
 			i--

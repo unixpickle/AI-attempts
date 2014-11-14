@@ -48,3 +48,11 @@ func (self *Network) CountFiring() uint {
 	}
 	return count
 }
+
+func (self *Network) GetNeuron(idx int) *Neuron {
+	return self.neurons[idx]
+}
+
+func (self *Network) CountNeurons() int {
+	return len(self.neurons)
+}
