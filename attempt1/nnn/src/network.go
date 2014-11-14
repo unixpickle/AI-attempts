@@ -15,8 +15,8 @@ func (self *Network) AddNeuron(neuron *Neuron) {
 func (self *Network) RemoveNeuron(neuron *Neuron) {
 	for i, x := range self.neurons {
 		if x == neuron {
-			self.neurons[i] = self.neurons[len(self.neurons) - 1]
-			self.neurons = self.neurons[0 : len(self.neurons) - 1]
+			self.neurons[i] = self.neurons[len(self.neurons)-1]
+			self.neurons = self.neurons[0 : len(self.neurons)-1]
 			break
 		}
 	}

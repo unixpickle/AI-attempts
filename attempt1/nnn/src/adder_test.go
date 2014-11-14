@@ -1,4 +1,4 @@
-package nnn;
+package nnn
 
 import "testing"
 
@@ -15,12 +15,12 @@ func TestAdditionCircuit(t *testing.T) {
 
 func mapFromInput(a, b0, b1, c0, c1 int) map[string]bool {
 	return map[string]bool{"a0": a != 0, "b0": b0 != 0, "b1": b1 != 0,
-	                       "c0": c0 != 0, "c1": c1 != 0}
+		"c0": c0 != 0, "c1": c1 != 0}
 }
 
 func createSimpleAdder() (*Network, map[string]*Neuron) {
 	result := NewNetwork()
-	
+
 	// Create the inputs.
 	a0 := NewOrNeuron()
 	b0 := NewOrNeuron()
@@ -35,7 +35,7 @@ func createSimpleAdder() (*Network, map[string]*Neuron) {
 	delay1 := NewOrNeuron()
 	xor1 := NewXorNeuron()
 	and0 := NewAndNeuron()
-	
+
 	// Connect neurons
 	NewLink(a0, xor0)
 	NewLink(b0, xor0)
@@ -47,7 +47,7 @@ func createSimpleAdder() (*Network, map[string]*Neuron) {
 	NewLink(and0, xor1)
 	NewLink(delay0, c0)
 	NewLink(xor1, c1)
-	
+
 	// Add neurons to network
 	result.AddNeuron(a0)
 	result.AddNeuron(b0)
@@ -59,10 +59,10 @@ func createSimpleAdder() (*Network, map[string]*Neuron) {
 	result.AddNeuron(delay1)
 	result.AddNeuron(xor1)
 	result.AddNeuron(and0)
-	
+
 	controlMap := map[string]*Neuron{"a0": a0, "b0": b0, "b1": b1, "c0": c0,
-	                                 "c1": c1}
-	
+		"c1": c1}
+
 	return result, controlMap
 }
 

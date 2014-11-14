@@ -19,15 +19,15 @@ func NewNeuron(function int) *Neuron {
 }
 
 func NewOrNeuron() *Neuron {
-	return NewNeuron(NEURON_OR);
+	return NewNeuron(NEURON_OR)
 }
 
 func NewAndNeuron() *Neuron {
-	return NewNeuron(NEURON_AND);
+	return NewNeuron(NEURON_AND)
 }
 
 func NewXorNeuron() *Neuron {
-	return NewNeuron(NEURON_XOR);
+	return NewNeuron(NEURON_XOR)
 }
 
 func (self *Neuron) InputCount() int {
