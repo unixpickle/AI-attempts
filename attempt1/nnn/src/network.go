@@ -1,11 +1,12 @@
 package nnn
 
 type Network struct {
-	neurons []*Neuron
+	neurons    []*Neuron
+	time       CycleTime
 }
 
 func NewNetwork() *Network {
-	return &Network{[]*Neuron{}}
+	return &Network{[]*Neuron{}, 0}
 }
 
 func (self *Network) AddNeuron(neuron *Neuron) {
@@ -23,11 +24,18 @@ func (self *Network) RemoveNeuron(neuron *Neuron) {
 }
 
 func (self *Network) Cycle() {
-	for i := 0; i < len(self.neurons); i++ {
-		self.neurons[i].willFire = self.neurons[i].NextCycle()
+	self.time++
+	for _, neuron := range self.neurons {
+		neuron.willFire = neuron.NextCycle()
 	}
-	for i := 0; i < len(self.neurons); i++ {
-		self.neurons[i].firing = self.neurons[i].willFire
+	for _, neuron := range self.neurons {
+		neuron.firing = neuron.willFire
+		if neuron.firing {
+			neuron.lifetime.lastUsed = self.time
+			for _, output := range neuron.outputs {
+				output.lifetime.lastUsed = self.time
+			}
+		}
 	}
 }
 

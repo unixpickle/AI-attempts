@@ -1,12 +1,13 @@
 package nnn
 
 type Link struct {
-	input  *Neuron
-	output *Neuron
+	input    *Neuron
+	output   *Neuron
+	lifetime Lifetime
 }
 
 func NewLink(sender *Neuron, receiver *Neuron) *Link {
-	result := &Link{receiver, sender}
+	result := &Link{receiver, sender, NewLifetime()}
 	receiver.inputs = append(receiver.inputs, result)
 	sender.outputs = append(sender.outputs, result)
 	return result

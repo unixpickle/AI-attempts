@@ -12,10 +12,11 @@ type Neuron struct {
 	firing   bool
 	willFire bool
 	function int
+	lifetime Lifetime
 }
 
 func NewNeuron(function int) *Neuron {
-	return &Neuron{[]*Link{}, []*Link{}, false, false, function}
+	return &Neuron{[]*Link{}, []*Link{}, false, false, function, NewLifetime()}
 }
 
 func NewOrNeuron() *Neuron {
