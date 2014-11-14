@@ -7,6 +7,7 @@ func TestAdditionCircuit(t *testing.T) {
 	runAdderFunction(t, mapFromInput(0, 1, 0, 1, 0))
 	runAdderFunction(t, mapFromInput(0, 0, 1, 0, 1))
 	runAdderFunction(t, mapFromInput(0, 1, 1, 1, 1))
+	runAdderFunction(t, mapFromInput(1, 0, 0, 1, 0))
 	runAdderFunction(t, mapFromInput(1, 1, 0, 0, 1))
 	runAdderFunction(t, mapFromInput(1, 0, 1, 1, 1))
 	runAdderFunction(t, mapFromInput(1, 1, 1, 0, 0))
