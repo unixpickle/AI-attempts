@@ -34,7 +34,10 @@ func removeUnlinked(network *Network) bool {
 	removed := false
 	for i := 0; i < len(network.Neurons); i++ {
 		neuron := network.Neurons[i]
-		if len(neuron.Outputs) == 0 && !neuron.Life.Permanent {
+		if neuron.Life.Permanent {
+			continue
+		}
+		if len(neuron.Outputs) == 0 {
 			removed = true
 			network.RemoveNeuron(neuron)
 			i--

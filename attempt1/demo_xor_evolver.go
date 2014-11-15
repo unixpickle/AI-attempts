@@ -17,7 +17,7 @@ func main() {
 	network.AddNeuron(input1)
 	network.AddNeuron(output)
 	streak := 0
-	for i := 0; i < 100000; i++ {
+	for {
 		result := RunNetworkRandom(network)
 		fmt.Println("result:", result)
 		if result {
