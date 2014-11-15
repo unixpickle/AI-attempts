@@ -18,6 +18,16 @@ There are three types of neurons:
 
 While I am not sure what model will prove to be effective, I have an idea in mind.
 
+**UPDATE**: I have managed to create an evolving neural network which is sometimes able to learn to add two single binary digits and return a double-digit number. When it works (which it does about a third of the time), it takes a few seconds to run and generates two neurons.
+
+When it doesn't work, here's what happens:
+
+ * The maximum neuron count is 6
+ * Two neurons get created (it doesn't matter which function they perform)
+ * These neurons get connected together in a way such that they are taking no input from the input neurons
+ * Their amount of pain never increases enough because they're not connected to any inputs.
+ * Thus, the network cannot grow, and it cannot be easily pruned either.
+
 ### Destruction of neurons and links
 
 When the neural network experiences pain, neurons and links which fired more recently will be more affected by the pain.  When a neuron or link has experienced enough net pain, it's deletion will become probable.

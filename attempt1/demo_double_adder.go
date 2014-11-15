@@ -35,8 +35,8 @@ func main() {
 		}
 		if (trues+falses)%1000 == 0 {
 			fmt.Println("true/false ratio:",
-				float64(trues)/float64(falses), "cycles =",
-			    network.Time)
+				float64(trues)/float64(falses), "cycles =", network.Time,
+				network.Neurons)
 		}
 	}
 	fmt.Println("found circuit after", trues+falses, "iterations and",
@@ -58,7 +58,8 @@ func RunNetwork(network *nnn.Network, values []bool) bool {
 	}
 	for i := 0; i < 5; i++ {
 		nnn.Prune(network)
-		if len(network.Neurons) < 7 {
+		if len(network.Neurons) < 6 {
+			fmt.Println("evolving")
 			nnn.Evolve(network, nnn.Recentness(network))
 		}
 		network.Cycle()
