@@ -1,7 +1,5 @@
 package nnn
 
-import "fmt"
-
 const (
 	NEURON_XOR = iota
 	NEURON_AND = iota
@@ -33,8 +31,9 @@ func NewXorNeuron() *Neuron {
 	return NewNeuron(NEURON_XOR)
 }
 
-func (self *Neuron) InputCount() int {
-	count := 0
+// InputCount returns the number of neurons which are actively firing.
+func (self *Neuron) InputCount() uint {
+	var count uint = 0
 	for _, link := range self.Inputs {
 		if link.Sender.Firing {
 			count++
@@ -65,14 +64,6 @@ func (self *Neuron) NextCycle() bool {
 	return false
 }
 
-func (self *Neuron) Fire() {
-	self.Firing = true
-}
-
-func (self *Neuron) Inhibit() {
-	self.Firing = false
-}
-
 func (self *Neuron) RemoveLinks() {
 	for len(self.Inputs) > 0 {
 		self.Inputs[0].Remove()
@@ -80,24 +71,4 @@ func (self *Neuron) RemoveLinks() {
 	for len(self.Outputs) > 0 {
 		self.Outputs[0].Remove()
 	}
-}
-
-func (self *Neuron) String() string {
-	var funcStr string
-	switch self.Function {
-	case NEURON_OR:
-		funcStr = "OR"
-	case NEURON_AND:
-		funcStr = "AND"
-	case NEURON_XOR:
-		funcStr = "XOR"
-	}
-	var firingStr string
-	if self.Firing {
-		firingStr = "true"
-	} else {
-		firingStr = "false"
-	}
-	return fmt.Sprintf("Neuron(%p){Function=%s, Firing=%s, Outputs=%s}", self,
-	    funcStr, firingStr, self.Outputs)
 }

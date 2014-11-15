@@ -26,7 +26,8 @@ func Prune(network *Network) {
 		}
 	}
 	// TODO: see if I need these curly braces
-	for removeUnlinked(network) {}
+	for removeUnlinked(network) {
+	}
 }
 
 func removeUnlinked(network *Network) bool {

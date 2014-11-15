@@ -3,10 +3,12 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"time"
 	"./nnn/src"
 )
 
 func main() {
+	rand.Seed(time.Now().UTC().UnixNano())
 	network := nnn.NewNetwork()
 	input0 := nnn.NewOrNeuron()
 	input1 := nnn.NewOrNeuron()
@@ -14,8 +16,18 @@ func main() {
 	network.AddNeuron(input0)
 	network.AddNeuron(input1)
 	network.AddNeuron(output)
+	streak := 0
 	for i := 0; i < 100000; i++ {
-		fmt.Println("result:", RunNetworkRandom(network))
+		result := RunNetworkRandom(network)
+		fmt.Println("result:", result)
+		if result {
+			streak++
+			if streak == 100 {
+				break
+			}
+		} else {
+			streak = 0
+		}
 	}
 }
 

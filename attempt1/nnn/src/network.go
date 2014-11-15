@@ -1,8 +1,10 @@
 package nnn
 
+type CycleTime uint64
+
 type Network struct {
-	Neurons    []*Neuron
-	Time       CycleTime
+	Neurons []*Neuron
+	Time    CycleTime
 }
 
 func NewNetwork() *Network {
