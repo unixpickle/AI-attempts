@@ -1,9 +1,9 @@
 package main
 
 import (
-	"math/rand"
-	"fmt"
 	"./nnn/src"
+	"fmt"
+	"math/rand"
 	"time"
 )
 
@@ -26,20 +26,22 @@ func main() {
 		if result {
 			trues++
 			streak++
-			if streak == 100 {
+			if streak == 1000 {
 				break
 			}
 		} else {
 			falses++
 			streak = 0
 		}
-		if (trues + falses) % 1000 == 0 {
-			fmt.Println("result:", result, "ratio:",
-				float64(trues)/float64(falses))
+		if (trues+falses)%1000 == 0 {
+			fmt.Println("true/false ratio:",
+				float64(trues)/float64(falses), "cycles =",
+			    network.Time)
 		}
 	}
-	fmt.Println("found circuit after", trues + falses, "iterations and",
+	fmt.Println("found circuit after", trues+falses, "iterations and",
 		network.Time, "cycles.")
+	fmt.Println("circuit:", network.Neurons)
 }
 
 func RunNetworkRandom(network *nnn.Network) bool {
@@ -56,8 +58,7 @@ func RunNetwork(network *nnn.Network, values []bool) bool {
 	}
 	for i := 0; i < 5; i++ {
 		nnn.Prune(network)
-		// Allow up to 20 neurons
-		if len(network.Neurons) < 8 {
+		if len(network.Neurons) < 7 {
 			nnn.Evolve(network, nnn.Recentness(network))
 		}
 		network.Cycle()

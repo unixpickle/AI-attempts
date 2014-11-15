@@ -1,10 +1,10 @@
 package main
 
 import (
+	"./nnn/src"
 	"fmt"
 	"math/rand"
 	"time"
-	"./nnn/src"
 )
 
 func main() {
