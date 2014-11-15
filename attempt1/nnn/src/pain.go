@@ -1,5 +1,7 @@
 package nnn
 
+import "math/rand"
+
 func AddPain(network *Network, amount float64) {
 	for _, neuron := range network.Neurons {
 		for _, link := range neuron.Outputs {
@@ -13,9 +15,11 @@ func AddPain(network *Network, amount float64) {
 func Prune(network *Network) {
 	for _, neuron := range network.Neurons {
 		for i := 0; i < len(neuron.Outputs); i++ {
-			// TODO: use a better pruning function here with randomness
 			link := neuron.Outputs[i]
-			if link.NetPain > 1 && !link.Life.Permanent {
+			if link.Life.Permanent {
+				continue
+			}
+			if rand.Float64() < link.NetPain {
 				link.Remove()
 				i--
 			}

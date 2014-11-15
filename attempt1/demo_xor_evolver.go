@@ -31,7 +31,7 @@ func RunNetwork(network *nnn.Network, f0 bool, f1 bool, output bool) bool {
 	network.Neurons[1].Firing = f1
 	for i := 0; i < 5; i++ {
 		nnn.Prune(network)
-		if len(network.Neurons) < 4 {
+		if len(network.Neurons) < 10 {
 			nnn.Evolve(network, nnn.Recentness(network))
 		}
 		network.Cycle()
@@ -47,7 +47,6 @@ func RunNetwork(network *nnn.Network, f0 bool, f1 bool, output bool) bool {
 	}
 	if output {
 		nnn.AddPain(network, 1.0)
-		fmt.Println("result...", network.Neurons)
 		return false
 	}
 	return true
