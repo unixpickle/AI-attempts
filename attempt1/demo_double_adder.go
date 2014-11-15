@@ -33,8 +33,13 @@ func main() {
 			falses++
 			streak = 0
 		}
-		fmt.Println("result:", result, "ratio:", float64(trues)/float64(falses))
+		if (trues + falses) % 1000 == 0 {
+			fmt.Println("result:", result, "ratio:",
+				float64(trues)/float64(falses))
+		}
 	}
+	fmt.Println("found circuit after", trues + falses, "iterations and",
+		network.Time, "cycles.")
 }
 
 func RunNetworkRandom(network *nnn.Network) bool {
@@ -49,8 +54,7 @@ func RunNetwork(network *nnn.Network, values []bool) bool {
 	for i := 0; i < 2; i++ {
 		network.Neurons[i].Firing = values[i]
 	}
-	// Give the circuit 10 clockcycles to do it
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 5; i++ {
 		nnn.Prune(network)
 		// Allow up to 20 neurons
 		if len(network.Neurons) < 8 {
