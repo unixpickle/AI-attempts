@@ -3,8 +3,8 @@ package nnn
 import "fmt"
 
 type Link struct {
-	Input    *Neuron
-	Output   *Neuron
+	Receiver *Neuron
+	Sender   *Neuron
 	Life     Lifetime
 	NetPain  float64
 }
@@ -17,8 +17,8 @@ func NewLink(sender *Neuron, receiver *Neuron) *Link {
 }
 
 func (self *Link) Remove() {
-	self.removeFromList(&self.Input.Outputs)
-	self.removeFromList(&self.Output.Inputs)
+	self.removeFromList(&self.Receiver.Inputs)
+	self.removeFromList(&self.Sender.Outputs)
 }
 
 func (self *Link) removeFromList(list *[]*Link) {
@@ -32,6 +32,6 @@ func (self *Link) removeFromList(list *[]*Link) {
 }
 
 func (self *Link) String() string {
-	return fmt.Sprintf("Link(%p){Input=%p, Output=%p, NetPain=%f}", self,
-		self.Input, self.Output, self.NetPain)
+	return fmt.Sprintf("Link(%p){Receiver=%p, Sender=%p, NetPain=%f}", self,
+		self.Receiver, self.Sender, self.NetPain)
 }

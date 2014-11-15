@@ -14,7 +14,7 @@ func main() {
 	network.AddNeuron(input0)
 	network.AddNeuron(input1)
 	network.AddNeuron(output)
-	for i := 0; i < 10000; i++ {
+	for i := 0; i < 100000; i++ {
 		fmt.Println("result:", RunNetworkRandom(network))
 	}
 }
@@ -29,7 +29,6 @@ func RunNetworkRandom(network *nnn.Network) bool {
 func RunNetwork(network *nnn.Network, f0 bool, f1 bool, output bool) bool {
 	network.Neurons[0].Firing = f0
 	network.Neurons[1].Firing = f1
-	fmt.Println(network.Neurons)
 	for i := 0; i < 5; i++ {
 		nnn.Prune(network)
 		if len(network.Neurons) < 4 {
@@ -47,7 +46,8 @@ func RunNetwork(network *nnn.Network, f0 bool, f1 bool, output bool) bool {
 		}
 	}
 	if output {
-		nnn.AddPain(network, 0.5)
+		nnn.AddPain(network, 1.0)
+		fmt.Println("result...", network.Neurons)
 		return false
 	}
 	return true

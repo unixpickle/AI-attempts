@@ -36,7 +36,7 @@ func NewXorNeuron() *Neuron {
 func (self *Neuron) InputCount() int {
 	count := 0
 	for _, link := range self.Inputs {
-		if link.Output.Firing {
+		if link.Sender.Firing {
 			count++
 		}
 	}
@@ -49,14 +49,14 @@ func (self *Neuron) NextCycle() bool {
 		return self.InputCount()%2 != 0
 	case NEURON_AND:
 		for _, link := range self.Inputs {
-			if !link.Output.Firing {
+			if !link.Sender.Firing {
 				return false
 			}
 		}
 		return true
 	case NEURON_OR:
 		for _, link := range self.Inputs {
-			if link.Output.Firing {
+			if link.Sender.Firing {
 				return true
 			}
 		}
