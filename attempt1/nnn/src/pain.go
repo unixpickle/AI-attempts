@@ -13,7 +13,7 @@ func AddPain(network *Network, amount float64) {
 }
 
 func PrunePain(network *Network) {
-	Prune(network, func (link *Link) bool {
+	Prune(network, func(link *Link) bool {
 		return rand.Float64() > link.NetPain
 	})
 }

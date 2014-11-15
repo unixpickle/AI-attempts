@@ -1,8 +1,8 @@
 package nnn
 
 import (
-	"testing"
 	"math/rand"
+	"testing"
 )
 
 func TestXorEvolution(t *testing.T) {

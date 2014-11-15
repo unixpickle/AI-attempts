@@ -75,7 +75,7 @@ func RunNetwork(network *nnn.Network, values []bool) bool {
 	for i := 0; i < 5; i++ {
 		nnn.PrunePain(network)
 		nnn.PruneUseless(network, 1000)
-		for len(network.Neurons) < MAX_NEURONS {
+		if len(network.Neurons) < MAX_NEURONS {
 			nnn.Evolve(network, nnn.Recentness(network))
 		}
 		network.Cycle()
