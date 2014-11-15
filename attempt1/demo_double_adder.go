@@ -10,67 +10,61 @@ import (
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	network := nnn.NewNetwork()
-	a0 := nnn.NewOrNeuron()
-	a1 := nnn.NewOrNeuron()
-	b0 := nnn.NewOrNeuron()
-	b1 := nnn.NewOrNeuron()
+	a := nnn.NewOrNeuron()
+	b := nnn.NewOrNeuron()
 	c0 := nnn.NewOrNeuron()
 	c1 := nnn.NewOrNeuron()
-	network.AddNeuron(a0)
-	network.AddNeuron(a1)
-	network.AddNeuron(b0)
-	network.AddNeuron(b1)
+	network.AddNeuron(a)
+	network.AddNeuron(b)
 	network.AddNeuron(c0)
 	network.AddNeuron(c1)
 	streak := 0
+	trues := 0
+	falses := 0
 	for {
 		result := RunNetworkRandom(network)
-		fmt.Println("result:", result)
 		if result {
+			trues++
 			streak++
 			if streak == 100 {
 				break
 			}
 		} else {
+			falses++
 			streak = 0
 		}
+		fmt.Println("result:", result, "ratio:", float64(trues)/float64(falses))
 	}
 }
 
 func RunNetworkRandom(network *nnn.Network) bool {
-	a0 := rand.Intn(2) != 0
-	a1 := rand.Intn(2) != 0
-	b0 := rand.Intn(2) != 0
-	b1 := rand.Intn(2) != 0
-	c0 := (a0 && !b0) || (b0 && !a0)
-	carry := a0 && b0
-	c1 := (a1 && !b1) || (b1 && !a1)
-	if carry {
-		c1 = !c1
-	}
-	return RunNetwork(network, []bool{a0, a1, b0, b1, c0, c1})
+	a := rand.Intn(2) != 0
+	b := rand.Intn(2) != 0
+	c0 := (a || b) && !(a && b)
+	c1 := a && b
+	return RunNetwork(network, []bool{a, b, c0, c1})
 }
 
 func RunNetwork(network *nnn.Network, values []bool) bool {
-	for i := 0; i < 4; i++ {
+	for i := 0; i < 2; i++ {
 		network.Neurons[i].Firing = values[i]
 	}
 	// Give the circuit 10 clockcycles to do it
 	for i := 0; i < 10; i++ {
 		nnn.Prune(network)
 		// Allow up to 20 neurons
-		if len(network.Neurons) < 20 {
+		if len(network.Neurons) < 8 {
 			nnn.Evolve(network, nnn.Recentness(network))
 		}
 		network.Cycle()
-		if network.Neurons[4].Firing || network.Neurons[5].Firing {
+		if network.Neurons[2].Firing || network.Neurons[3].Firing {
 			// Compare the circuit's output to the given input
-			pain := -0.02
-			if network.Neurons[4].Firing != values[4] {
-				pain += 0.05
+			pain := -0.05
+			if network.Neurons[2].Firing != values[2] {
+				pain += 1.0
 			}
-			if network.Neurons[5].Firing != values[5] {
-				pain += 0.05
+			if network.Neurons[3].Firing != values[3] {
+				pain += 1.0
 			}
 			nnn.AddPain(network, pain)
 			if pain > 0 {
@@ -81,12 +75,12 @@ func RunNetwork(network *nnn.Network, values []bool) bool {
 		}
 	}
 	// The circuit gave no output
-	pain := -0.02
-	if values[4] {
-		pain += 0.05
+	pain := -0.05
+	if values[2] {
+		pain += 1.0
 	}
-	if values[5] {
-		pain += 0.05
+	if values[3] {
+		pain += 1.0
 	}
 	nnn.AddPain(network, pain)
 	if pain > 0 {
