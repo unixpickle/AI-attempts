@@ -57,6 +57,7 @@ func Evolve(network *Network, linkWeight WeightFunc) *Neuron {
 		NewLink(conns[1], neuron).Life.Permanent = false
 		NewLink(neuron, conns[2]).Life.Permanent = false
 	}
+	network.AddNeuron(neuron)
 	return neuron
 }
 
@@ -69,7 +70,7 @@ func WeightedChoose(network *Network, count int, weight WeightFunc) []*Neuron {
     // Get the initial weighted list
 	list := buildWeightedList(network, weight)
 	// Choose random elements from the list
-	result := make([]*Neuron, count)
+	result := make([]*Neuron, 0)
 	for i := 0; i < count; i++ {
 		var neuron *Neuron
 		neuron, list = pickNeuron(list)
