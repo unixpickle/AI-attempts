@@ -105,6 +105,14 @@ func pickNeuron(list []weightedNeuron) (*Neuron, []weightedNeuron) {
 	for i, wn := range list {
 		if wn.priorWeight + wn.weight >= random {
 			list[i] = list[count - 1]
+			
+			// Update priorWeight fields after the deletion
+			priorWeight := wn.priorWeight
+			for j := i; j < count - 1; j++ {
+				list[j].priorWeight = priorWeight
+				priorWeight += list[j].weight
+			}
+			
 			return wn.neuron, list[0 : count - 1]
 		}
 	}
