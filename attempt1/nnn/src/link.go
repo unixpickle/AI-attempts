@@ -1,5 +1,7 @@
 package nnn
 
+import "fmt"
+
 type Link struct {
 	Input    *Neuron
 	Output   *Neuron
@@ -27,4 +29,9 @@ func (self *Link) removeFromList(list *[]*Link) {
 			break
 		}
 	}
+}
+
+func (self *Link) String() string {
+	return fmt.Sprintf("Link(%p){Input=%p, Output=%p, NetPain=%f}", self,
+		self.Input, self.Output, self.NetPain)
 }

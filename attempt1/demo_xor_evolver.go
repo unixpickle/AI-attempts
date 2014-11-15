@@ -27,12 +27,12 @@ func RunNetworkRandom(network *nnn.Network) bool {
 }
 
 func RunNetwork(network *nnn.Network, f0 bool, f1 bool, output bool) bool {
-	fmt.Println(f0, f1, output)
 	network.Neurons[0].Firing = f0
 	network.Neurons[1].Firing = f1
+	fmt.Println(network.Neurons)
 	for i := 0; i < 5; i++ {
 		nnn.Prune(network)
-		if len(network.Neurons) < 30 {
+		if len(network.Neurons) < 4 {
 			nnn.Evolve(network, nnn.Recentness(network))
 		}
 		network.Cycle()
@@ -46,5 +46,9 @@ func RunNetwork(network *nnn.Network, f0 bool, f1 bool, output bool) bool {
 			}
 		}
 	}
-	return !output
+	if output {
+		nnn.AddPain(network, 0.5)
+		return false
+	}
+	return true
 }
