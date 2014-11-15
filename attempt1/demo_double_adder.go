@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+const MAX_NEURONS = 6
+
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	network := nnn.NewNetwork()
@@ -35,8 +37,7 @@ func main() {
 		}
 		if (trues+falses)%1000 == 0 {
 			fmt.Println("true/false ratio:",
-				float64(trues)/float64(falses), "cycles =", network.Time,
-				network.Neurons)
+				float64(trues)/float64(falses), "cycles =", network.Time)
 		}
 	}
 	fmt.Println("found circuit after", trues+falses, "iterations and",
@@ -56,42 +57,32 @@ func RunNetwork(network *nnn.Network, values []bool) bool {
 	for i := 0; i < 2; i++ {
 		network.Neurons[i].Firing = values[i]
 	}
+	handleEnd := func() bool {
+		// Compare the circuit's output to the given input
+		status := true
+		pain := -0.001
+		if network.Neurons[2].Firing != values[2] {
+			status = false
+			pain += 0.6
+		}
+		if network.Neurons[3].Firing != values[3] {
+			status = false
+			pain += 0.4
+		}
+		nnn.AddPain(network, pain)
+		return status
+	}
 	for i := 0; i < 5; i++ {
-		nnn.Prune(network)
-		if len(network.Neurons) < 6 {
-			fmt.Println("evolving")
+		nnn.PrunePain(network)
+		nnn.PruneUseless(network, 1000)
+		for len(network.Neurons) < MAX_NEURONS {
 			nnn.Evolve(network, nnn.Recentness(network))
 		}
 		network.Cycle()
 		if network.Neurons[2].Firing || network.Neurons[3].Firing {
-			// Compare the circuit's output to the given input
-			pain := -0.05
-			if network.Neurons[2].Firing != values[2] {
-				pain += 1.0
-			}
-			if network.Neurons[3].Firing != values[3] {
-				pain += 1.0
-			}
-			nnn.AddPain(network, pain)
-			if pain > 0 {
-				return false
-			} else {
-				return true
-			}
+			return handleEnd()
 		}
 	}
 	// The circuit gave no output
-	pain := -0.05
-	if values[2] {
-		pain += 1.0
-	}
-	if values[3] {
-		pain += 1.0
-	}
-	nnn.AddPain(network, pain)
-	if pain > 0 {
-		return false
-	} else {
-		return true
-	}
+	return handleEnd()
 }

@@ -39,7 +39,7 @@ func runXorCase(network *Network, f0 bool, f1 bool, output bool) bool {
 	network.Neurons[0].Firing = f0
 	network.Neurons[1].Firing = f1
 	for i := 0; i < 5; i++ {
-		Prune(network)
+		PrunePain(network)
 		if len(network.Neurons) < 10 {
 			Evolve(network, Recentness(network))
 		}

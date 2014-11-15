@@ -27,12 +27,8 @@ func (self *Network) RemoveNeuron(neuron *Neuron) {
 }
 
 func (self *Network) Cycle() {
-	self.Time++
 	for _, neuron := range self.Neurons {
 		neuron.willFire = neuron.NextCycle()
-	}
-	for _, neuron := range self.Neurons {
-		neuron.Firing = neuron.willFire
 		if neuron.Firing {
 			neuron.Life.LastUsed = self.Time
 			for _, output := range neuron.Outputs {
@@ -40,6 +36,10 @@ func (self *Network) Cycle() {
 			}
 		}
 	}
+	for _, neuron := range self.Neurons {
+		neuron.Firing = neuron.willFire
+	}
+	self.Time++
 }
 
 func (self *Network) CountFiring() uint {

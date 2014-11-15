@@ -39,7 +39,7 @@ func WeightedChoose(network *Network, count int, weight WeightFunc) []*Neuron {
 
 func buildWeightedList(network *Network, weight WeightFunc) []weightedNeuron {
 	// Generate a list of weighted neurons which we can use for randomness.
-	weighted := make([]weightedNeuron, len(network.Neurons))
+	weighted := make([]weightedNeuron, 0)
 	var prior float64 = 0.0
 	for _, neuron := range network.Neurons {
 		el := weightedNeuron{weight(neuron), prior, neuron}

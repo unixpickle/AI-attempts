@@ -4,7 +4,7 @@ import "math/rand"
 
 // Generates a neuron with a random type.
 // The new neuron will not be marked "permanent"
-func RandomNeuron() *Neuron {
+func RandomNeuron(network *Network) *Neuron {
 	// TODO: see if I should weigh this more heavily towards OR neurons...
 	var result *Neuron
 	switch rand.Intn(3) {
@@ -16,6 +16,7 @@ func RandomNeuron() *Neuron {
 		result = NewXorNeuron()
 	}
 	result.Life.Permanent = false
+	result.Life.Creation = network.Time
 	return result
 }
 
@@ -27,19 +28,24 @@ func Evolve(network *Network, linkWeight WeightFunc) *Neuron {
 		return nil
 	}
 
-	neuron := RandomNeuron()
+	neuron := RandomNeuron(network)
 	if len(network.Neurons) == 2 || rand.Intn(2) == 0 {
 		// One input, one output
 		conns := WeightedChoose(network, 2, linkWeight)
-		NewLink(conns[0], neuron).Life.Permanent = false
-		NewLink(neuron, conns[1]).Life.Permanent = false
+		configLink(network, NewLink(conns[0], neuron))
+		configLink(network, NewLink(neuron, conns[1]))
 	} else {
 		// Two inputs, one output
 		conns := WeightedChoose(network, 3, linkWeight)
-		NewLink(conns[0], neuron).Life.Permanent = false
-		NewLink(conns[1], neuron).Life.Permanent = false
-		NewLink(neuron, conns[2]).Life.Permanent = false
+		configLink(network, NewLink(conns[0], neuron))
+		configLink(network, NewLink(conns[1], neuron))
+		configLink(network, NewLink(neuron, conns[2]))
 	}
 	network.AddNeuron(neuron)
 	return neuron
+}
+
+func configLink(network *Network, link *Link) {
+	link.Life.Permanent = false
+	link.Life.Creation = network.Time
 }
