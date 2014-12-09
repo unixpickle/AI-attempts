@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./nnn/src"
+	"github.com/unixpickle/AI-attempts/attempt1/nnn"
 	"fmt"
 	"math/rand"
 	"time"
