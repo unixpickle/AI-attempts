@@ -1,12 +1,13 @@
 package nnn
 
 type Link struct {
-	From *Neuron
-	To   *Neuron
+	From     *Neuron
+	To       *Neuron
+	UserInfo interface{}
 }
 
 func NewLink(from *Neuron, to *Neuron) *Link {
-	res := &Link{from, to}
+	res := &Link{from, to, nil}
 	from.Outputs = append(from.Outputs, res)
 	to.Inputs = append(to.Inputs, res)
 	return res

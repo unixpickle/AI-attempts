@@ -10,13 +10,14 @@ type Neuron struct {
 	Inputs   []*Link
 	Outputs  []*Link
 	Function int
+	UserInfo interface{}
 	firing   bool
 	willFire bool
 	network  *Network
 }
 
 func NewNeuron(function int) *Neuron {
-	return &Neuron{[]*Link{}, []*Link{}, function, false, false, nil}
+	return &Neuron{[]*Link{}, []*Link{}, function, nil, false, false, nil}
 }
 
 func NewAndNeuron() *Neuron {
