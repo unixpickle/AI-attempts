@@ -1,6 +1,9 @@
 package evolver
 
-import "sync"
+import (
+	"fmt"
+	"sync"
+)
 
 type ArenaCycle func(o *Organism)
 
@@ -63,14 +66,16 @@ func (a *Arena) lifeLogic(o *Organism) bool {
 	if value >= a.goalValue {
 		a.resChan <- o
 		close(a.resChan)
+		a.done = true
 		return false
 	}
+	
+	// Modify the average
+	a.averageValue = (a.averageValue + a.cycleWeight*value) /
+		(1.0 + a.cycleWeight)
 
 	// If we are valueable, we will most likely reproduce
 	if value >= a.averageValue {
-		// Adjust the average value
-		a.averageValue = (a.averageValue + a.cycleWeight*value) /
-			(1.0 + a.cycleWeight)
 		// Reproduce if there is no overpopulation
 		if a.population < a.maxPopulation {
 			a.population++
@@ -78,6 +83,8 @@ func (a *Arena) lifeLogic(o *Organism) bool {
 			go a.runOrganism(o.Reproduce())
 		}
 	} else if a.population == a.maxPopulation {
+		fmt.Println("death, population", a.population, "average",
+			a.averageValue)
 		// Overpopulation means someone has to die, and we are a weak link.
 		return false
 	}

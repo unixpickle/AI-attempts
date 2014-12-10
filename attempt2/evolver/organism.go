@@ -23,12 +23,12 @@ func (o *Organism) Clone() *Organism {
 	// Deep cloning for all the History objects
 	for i := 0; i < res.Len(); i++ {
 		neuron := res.Get(i)
-		if neuron.UserInfo != nil {
-			neuron.UserInfo = neuron.UserInfo.(*History).Clone()
+		if hist := neuronHistory(neuron); hist != nil {
+			neuron.UserInfo = hist.Clone()
 		}
 		for _, link := range neuron.Inputs {
-			if link.UserInfo != nil {
-				link.UserInfo = link.UserInfo.(*History).Clone()
+			if hist := linkHistory(link); hist != nil {
+				link.UserInfo = hist.Clone()
 			}
 		}
 	}
@@ -43,12 +43,12 @@ func (o *Organism) Cycle() {
 		if !neuron.Firing() {
 			continue
 		}
-		if neuron.UserInfo == nil {
+		if neuronHistory(neuron) == nil {
 			neuron.UserInfo = NewHistory()
 		}
 		neuron.UserInfo.(*History).LastFired = o.Age()
 		for _, link := range neuron.Outputs {
-			if link.UserInfo == nil {
+			if linkHistory(link) == nil {
 				link.UserInfo = NewHistory()
 			}
 			link.UserInfo.(*History).LastFired = o.Age()
@@ -66,7 +66,7 @@ func (o *Organism) History() History {
 
 func (o *Organism) KeepAt(idx int) {
 	neuron := o.Get(idx)
-	if neuron.UserInfo == nil {
+	if neuronHistory(neuron) == nil {
 		neuron.UserInfo = NewHistory()
 	}
 	neuron.UserInfo.(*History).Permanent = true
@@ -76,17 +76,32 @@ func (o *Organism) Pain(value float64) {
 	// Trigger pain using the history of each neuron and link
 	for i := 0; i < o.Len(); i++ {
 		neuron := o.Get(i)
-		if neuron.UserInfo == nil {
+		if neuronHistory(neuron) == nil {
 			continue
 		}
 		neuron.UserInfo.(*History).ApplyPain(value, o.Age())
 		for _, link := range neuron.Outputs {
-			if link.UserInfo == nil {
-				continue
+			if hist := linkHistory(link); hist != nil {
+				hist.LastFired = o.Age()
 			}
-			link.UserInfo.(*History).LastFired = o.Age()
 		}
 	}
 	// Trigger pain for the entire organism
 	o.history.ApplyPain(value, o.Age())
+}
+
+func neuronHistory(n *nnn.Neuron) *History {
+	var res *History = nil
+	if hist, ok := n.UserInfo.(*History); ok {
+		res = hist
+	}
+	return res
+}
+
+func linkHistory(l *nnn.Link) *History {
+	var res *History = nil
+	if hist, ok := l.UserInfo.(*History); ok {
+		res = hist
+	}
+	return res
 }

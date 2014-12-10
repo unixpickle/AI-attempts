@@ -13,14 +13,14 @@ func (o *Organism) Reproduce() *Organism {
 	addNeurons(child)
 
 	// Stop all neural signals and reset all histories
-	child.history = resetHistory(child.history)
+	child.history = NewHistory()
 	child.age = 0
 	for i := 0; i < child.Len(); i++ {
 		neuron := child.Get(i)
 		neuron.Inhibit()
-		neuron.UserInfo = resetHistory(neuron.UserInfo.(*History))
+		neuron.UserInfo = resetHistory(neuron.UserInfo)
 		for _, link := range neuron.Inputs {
-			link.UserInfo = resetHistory(link.UserInfo.(*History))
+			link.UserInfo = resetHistory(link.UserInfo)
 		}
 	}
 	return child
@@ -89,8 +89,8 @@ func removeLinksInNeuron(n *nnn.Neuron) {
 	}
 }
 
-func resetHistory(h *History) *History {
-	if h == nil || !h.Permanent {
+func resetHistory(h interface{}) *History {
+	if hist, ok := h.(*History); !ok || hist == nil || !hist.Permanent {
 		return nil
 	}
 	res := NewHistory()

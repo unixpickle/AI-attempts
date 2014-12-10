@@ -59,9 +59,13 @@ func (n *Network) indexOf(n1 *Neuron, n2 *Neuron) (int, int) {
 	for i, neuron := range n.neurons {
 		if neuron == n1 {
 			res1 = i
-		} else if neuron == n2 {
+		}
+		if neuron == n2 {
 			res2 = i
 		}
+	}
+	if res1 < 0 || res2 < 0 {
+		panic("neuron not found")
 	}
 	return res1, res2
 }
