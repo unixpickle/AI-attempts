@@ -29,8 +29,8 @@ func (n *Network) Clone() *Network {
 	for _, neuron := range n.neurons {
 		for _, link := range neuron.Inputs {
 			from, to := n.indexOf(link.From, link.To)
-			link := NewLink(res.neurons[from], res.neurons[to])
-			link.UserInfo = link.UserInfo
+			nl := NewLink(res.neurons[from], res.neurons[to])
+			nl.UserInfo = link.UserInfo
 		}
 	}
 	return res

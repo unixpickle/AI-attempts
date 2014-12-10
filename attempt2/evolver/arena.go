@@ -1,11 +1,8 @@
 package evolver
 
-import (
-	"fmt"
-	"sync"
-)
+import "sync"
 
-type ArenaCycle func(o *Organism)
+type ArenaCycle func(o *Organism) bool
 
 type Arena struct {
 	goalValue     float64
@@ -20,13 +17,15 @@ type Arena struct {
 	done         bool
 	averageValue float64
 	population   uint64
+	totalDeaths  uint64
 }
 
 func NewArena(goal float64, cycleWeight float64, adultAge uint64, maxPop uint64,
 	cycleFunc ArenaCycle, first *Organism) *Arena {
+	first.history.Permanent = true
 	res := &Arena{goal, cycleWeight, adultAge, maxPop, cycleFunc,
 		sync.RWMutex{}, sync.WaitGroup{}, make(chan *Organism, 1), false, 0.0,
-		1}
+		1, 0}
 	go res.runOrganism(first)
 	res.waitGroup.Add(1)
 	return res
@@ -39,6 +38,12 @@ func (a *Arena) Cancel() {
 		a.done = true
 		close(a.resChan)
 	}
+}
+
+func (a *Arena) TotalDeaths() uint64 {
+	a.mutex.RLock()
+	defer a.mutex.RUnlock()
+	return a.totalDeaths
 }
 
 func (a *Arena) Wait() *Organism {
@@ -75,16 +80,15 @@ func (a *Arena) lifeLogic(o *Organism) bool {
 		(1.0 + a.cycleWeight)
 
 	// If we are valueable, we will most likely reproduce
-	if value >= a.averageValue {
+	
+	if a.shouldReproduce(value) {
 		// Reproduce if there is no overpopulation
 		if a.population < a.maxPopulation {
 			a.population++
 			a.waitGroup.Add(1)
 			go a.runOrganism(o.Reproduce())
 		}
-	} else if a.population == a.maxPopulation {
-		fmt.Println("death, population", a.population, "average",
-			a.averageValue)
+	} else if a.population == a.maxPopulation && !o.history.Permanent {
 		// Overpopulation means someone has to die, and we are a weak link.
 		return false
 	}
@@ -94,17 +98,41 @@ func (a *Arena) lifeLogic(o *Organism) bool {
 func (a *Arena) runOrganism(o *Organism) {
 	for {
 		// Run a cycle
-		a.cycleFunc(o)
+		if !a.cycleFunc(o) {
+			// They can kill an organism automatically
+			a.mutex.Lock()
+			a.population--
+			a.totalDeaths++
+			if a.population == 0 && !a.done {
+				a.done = true
+				close(a.resChan)
+			}
+			a.mutex.Unlock()
+			a.waitGroup.Done()
+			return
+		}
 
 		// Perform life logic
 		a.mutex.Lock()
 		keepAlive := a.lifeLogic(o)
 		if !keepAlive {
 			a.population--
+			a.totalDeaths++
+			if a.population == 0 && !a.done {
+				a.done = true
+				close(a.resChan)
+			}
 			a.mutex.Unlock()
 			a.waitGroup.Done()
 			return
 		}
 		a.mutex.Unlock()
 	}
+}
+
+func (a *Arena) shouldReproduce(value float64) bool {
+	if a.population == 1 {
+		return true
+	}
+	return value >= a.averageValue
 }

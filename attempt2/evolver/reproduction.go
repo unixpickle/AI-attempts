@@ -33,22 +33,19 @@ func addNeurons(o *Organism) {
 
 	// Inputs (1 or 2)
 	from1 := o.Get(rand.Intn(o.Len()))
-	nnn.NewLink(from1, neuron)
+	NewLink(from1, neuron)
 	if rand.Intn(2) == 0 {
 		// Two inputs
 		from2 := o.Get(rand.Intn(o.Len()))
-		nnn.NewLink(from2, neuron)
+		NewLink(from2, neuron)
 	}
 
 	// Output
 	dest := o.Get(rand.Intn(o.Len()))
-	nnn.NewLink(neuron, dest)
+	NewLink(neuron, dest)
 }
 
 func isPermanent(n *nnn.Neuron) bool {
-	if n.UserInfo == nil {
-		return false
-	}
 	return n.UserInfo.(*History).Permanent
 }
 
@@ -79,9 +76,6 @@ func prune(o *Organism) {
 func removeLinksInNeuron(n *nnn.Neuron) {
 	for i := 0; i < len(n.Inputs); i++ {
 		link := n.Inputs[i]
-		if link.UserInfo == nil {
-			continue
-		}
 		if !link.UserInfo.(*History).RandomKeep() {
 			link.Remove()
 			i--
@@ -90,10 +84,7 @@ func removeLinksInNeuron(n *nnn.Neuron) {
 }
 
 func resetHistory(h interface{}) *History {
-	if hist, ok := h.(*History); !ok || hist == nil || !hist.Permanent {
-		return nil
-	}
 	res := NewHistory()
-	res.Permanent = true
+	res.Permanent = h.(*History).Permanent
 	return res
 }

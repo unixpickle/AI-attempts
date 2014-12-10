@@ -20,16 +20,22 @@ func main() {
 	organism.KeepAt(0)
 	organism.KeepAt(1)
 	organism.KeepAt(2)
-	arena := evolver.NewArena(0.99, 0.01, 1000, 50, RunXorCase, organism)
+	arena := evolver.NewArena(0.999, 0.01, 100, 8, RunXorCase, organism)
 	o := arena.Wait()
-	fmt.Println("Got organism of age", o.Age())
+	if o == nil {
+		fmt.Println("Evolution failed :(")
+	} else {
+		fmt.Println("Got organism of age", o.Age(), "; totalDeaths =",
+			arena.TotalDeaths(), "; organism size =", o.Len())
+	}
 }
 
-func RunXorCase(o *evolver.Organism) {
+func RunXorCase(o *evolver.Organism) bool {
 	flag0 := rand.Intn(2) != 0
 	flag1 := rand.Intn(2) != 0
 	output := (flag0 || flag1) && !(flag0 && flag1)
 	RunCase(o, flag0, flag1, output)
+	return true
 }
 
 func RunCase(o *evolver.Organism, flag0, flag1, output bool) {
@@ -48,16 +54,15 @@ func RunCase(o *evolver.Organism, flag0, flag1, output bool) {
 		if o.Get(2).Firing() {
 			if !output {
 				o.Pain(1.0)
-				return
 			} else {
-				o.Pain(-0.1)
-				return
+				o.Pain(-0.2)
 			}
+			return
 		}
 	}
 	if output {
 		o.Pain(1.0)
 	} else {
-		o.Pain(-0.1)
+		o.Pain(-0.2)
 	}
 }
