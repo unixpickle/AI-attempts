@@ -21,13 +21,16 @@ func (n *Network) Clone() *Network {
 	// Duplicate neurons themselves
 	for _, neuron := range n.neurons {
 		cpy := NewNeuron(neuron.Function)
+		cpy.UserInfo = neuron.UserInfo
+		cpy.firing = neuron.firing
 		res.Add(cpy)
 	}
 	// Duplicate links between neurons
 	for _, neuron := range n.neurons {
 		for _, link := range neuron.Inputs {
 			from, to := n.indexOf(link.From, link.To)
-			NewLink(res.neurons[from], res.neurons[to])
+			link := NewLink(res.neurons[from], res.neurons[to])
+			link.UserInfo = link.UserInfo
 		}
 	}
 	return res

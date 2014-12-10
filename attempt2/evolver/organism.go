@@ -16,6 +16,26 @@ func (o *Organism) Age() uint64 {
 	return o.age
 }
 
+func (o *Organism) Clone() *Organism {
+	// Clone everything on the surface
+	res := &Organism{o.Network.Clone(), o.history.Clone(), o.age}
+	
+	// Deep cloning for all the History objects
+	for i := 0; i < res.Len(); i++ {
+		neuron := res.Get(i)
+		if neuron.UserInfo != nil {
+			neuron.UserInfo = neuron.UserInfo.(*History).Clone()
+		}
+		for _, link := range neuron.Inputs {
+			if link.UserInfo != nil {
+				link.UserInfo = link.UserInfo.(*History).Clone()
+			}
+		}
+	}
+	
+	return res
+}
+
 func (o *Organism) Cycle() {
 	// Update the timestamps on firing neurons and their outputs
 	for i := 0; i < o.Len(); i++ {

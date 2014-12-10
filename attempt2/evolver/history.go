@@ -20,6 +20,11 @@ func (h *History) ApplyPain(pain float64, time uint64) {
 	h.Pain += pain / float64(time - h.LastFired)
 }
 
+func (h *History) Clone() *History {
+	cpy := *h
+	return &cpy
+}
+
 func (h *History) RandomKeep() bool {
 	if h.Permanent {
 		return true
