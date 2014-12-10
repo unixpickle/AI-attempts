@@ -1,5 +1,7 @@
 package nnn
 
+import "fmt"
+
 type Link struct {
 	From     *Neuron
 	To       *Neuron
@@ -22,6 +24,10 @@ func (l *Link) Remove() {
 		l.removeFromList(&l.To.Inputs)
 		l.To = nil
 	}
+}
+
+func (self *Link) String() string {
+	return fmt.Sprintf("Link(%p){To=%p, From=%p}", self, self.To, self.From)
 }
 
 func (l *Link) removeFromList(list *[]*Link) {

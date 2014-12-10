@@ -53,6 +53,18 @@ func (n *Network) Len() int {
 	return len(n.neurons)
 }
 
+func (n *Network) String() string {
+	res := ""
+	for i, obj := range n.neurons {
+		if i != 0 {
+			res += ", " + obj.String()
+		} else {
+			res = obj.String()
+		}
+	}
+	return "Network{" + res + "}"
+}
+
 func (n *Network) indexOf(n1 *Neuron, n2 *Neuron) (int, int) {
 	res1 := -1
 	res2 := -1

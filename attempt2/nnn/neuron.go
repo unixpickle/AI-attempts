@@ -1,5 +1,7 @@
 package nnn
 
+import "fmt"
+
 const (
 	NEURON_XOR = iota
 	NEURON_AND = iota
@@ -59,6 +61,26 @@ func (n *Neuron) Remove() {
 		n.removeFromList(&n.network.neurons)
 		n.network = nil
 	}
+}
+
+func (self *Neuron) String() string {
+	var funcStr string
+	switch self.Function {
+	case NEURON_OR:
+		funcStr = "OR"
+	case NEURON_AND:
+		funcStr = "AND"
+	case NEURON_XOR:
+		funcStr = "XOR"
+	}
+	var firingStr string
+	if self.Firing() {
+		firingStr = "true"
+	} else {
+		firingStr = "false"
+	}
+	return fmt.Sprintf("Neuron(%p){Function=%s, Firing=%s, Outputs=%s}", self,
+		funcStr, firingStr, self.Outputs)
 }
 
 func (n *Neuron) countInputs() int {
