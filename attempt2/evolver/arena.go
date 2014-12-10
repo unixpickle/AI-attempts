@@ -10,13 +10,13 @@ type Arena struct {
 	adultAge      uint64
 	maxPopulation uint64
 	cycleFunc     ArenaCycle
-	
-	mutex         sync.RWMutex
-	waitGroup     sync.WaitGroup
-	resChan       chan *Organism
-	done          bool
-	averageValue  float64
-	population    uint64
+
+	mutex        sync.RWMutex
+	waitGroup    sync.WaitGroup
+	resChan      chan *Organism
+	done         bool
+	averageValue float64
+	population   uint64
 }
 
 func NewArena(goal float64, cycleWeight float64, adultAge uint64, maxPop uint64,
@@ -49,23 +49,23 @@ func (a *Arena) lifeLogic(o *Organism) bool {
 	if a.done {
 		return false
 	}
-	
+
 	// Young people cannot die
 	if o.Age() < a.adultAge {
 		return true
 	}
-	
+
 	// Get the value of this organism
 	history := o.History()
 	value := history.Value()
-	
+
 	// If this organism achieved the goal, die
 	if value >= a.goalValue {
 		a.resChan <- o
 		close(a.resChan)
 		return false
 	}
-	
+
 	// If we are valueable, we will most likely reproduce
 	if value >= a.averageValue {
 		// Adjust the average value
@@ -88,7 +88,7 @@ func (a *Arena) runOrganism(o *Organism) {
 	for {
 		// Run a cycle
 		a.cycleFunc(o)
-		
+
 		// Perform life logic
 		a.mutex.Lock()
 		keepAlive := a.lifeLogic(o)

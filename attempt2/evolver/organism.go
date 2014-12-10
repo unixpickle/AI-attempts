@@ -19,7 +19,7 @@ func (o *Organism) Age() uint64 {
 func (o *Organism) Clone() *Organism {
 	// Clone everything on the surface
 	res := &Organism{o.Network.Clone(), o.history.Clone(), o.age}
-	
+
 	// Deep cloning for all the History objects
 	for i := 0; i < res.Len(); i++ {
 		neuron := res.Get(i)
@@ -32,7 +32,7 @@ func (o *Organism) Clone() *Organism {
 			}
 		}
 	}
-	
+
 	return res
 }
 

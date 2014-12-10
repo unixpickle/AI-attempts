@@ -7,11 +7,11 @@ import (
 
 func (o *Organism) Reproduce() *Organism {
 	child := o.Clone()
-	
+
 	// Perform mutations on the child
 	prune(child)
 	addNeurons(child)
-	
+
 	// Stop all neural signals and reset all histories
 	child.history = resetHistory(child.history)
 	child.age = 0
@@ -30,7 +30,7 @@ func addNeurons(o *Organism) {
 	// Generate and add a neuron with a random function
 	neuron := nnn.NewNeuron(rand.Intn(3))
 	o.Add(neuron)
-	
+
 	// Inputs (1 or 2)
 	from1 := o.Get(rand.Intn(o.Len()))
 	nnn.NewLink(from1, neuron)
@@ -39,7 +39,7 @@ func addNeurons(o *Organism) {
 		from2 := o.Get(rand.Intn(o.Len()))
 		nnn.NewLink(from2, neuron)
 	}
-	
+
 	// Output
 	dest := o.Get(rand.Intn(o.Len()))
 	nnn.NewLink(neuron, dest)
@@ -58,7 +58,7 @@ func prune(o *Organism) {
 		neuron := o.Get(i)
 		removeLinksInNeuron(neuron)
 	}
-	
+
 	// Keep removing unused neurons until nothing changes.
 	// This is probably not really necessary.
 	changed := true

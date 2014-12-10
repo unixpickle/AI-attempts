@@ -17,7 +17,7 @@ func NewHistory() *History {
 
 func (h *History) ApplyPain(pain float64, time uint64) {
 	// Effect of pain is inversely proportional to its delay
-	h.Pain += pain / float64(time - h.LastFired)
+	h.Pain += pain / float64(time-h.LastFired)
 }
 
 func (h *History) Clone() *History {
@@ -35,5 +35,5 @@ func (h *History) RandomKeep() bool {
 func (h *History) Value() float64 {
 	// This is a nice asymptotic function which approaches 1 for negative values
 	// and 0 for positive values.
-	return 1.0 - (math.Atan(h.Pain) + math.Pi/2)/math.Pi
+	return 1.0 - (math.Atan(h.Pain)+math.Pi/2)/math.Pi
 }
