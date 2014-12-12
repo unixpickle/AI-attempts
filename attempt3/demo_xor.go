@@ -25,7 +25,8 @@ func main() {
 	if bestOrganism == nil {
 		fmt.Println("Did not get a good organism.")
 	} else {
-		fmt.Println("Got organism:", bestOrganism)
+		fmt.Println("Got organism:", bestOrganism, "value",
+			bestOrganism.Health().Value())
 	}
 }
 
@@ -36,7 +37,7 @@ func Death(o *evolver.Organism) {
 }
 
 func RunXorCase(o *evolver.Organism) {
-	if o.Health().Cycles > 1000 && o.Health().Value() > 0 {
+	if o.Health().Cycles > 1000 && o.Health().Value() > 0.05 {
 		bestOrganism = o
 		arena.Stop()
 		return

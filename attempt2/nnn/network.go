@@ -1,5 +1,7 @@
 package nnn
 
+import "fmt"
+
 type Network struct {
 	neurons []*Neuron
 }
@@ -54,15 +56,34 @@ func (n *Network) Len() int {
 }
 
 func (n *Network) String() string {
-	res := ""
+	res := "{Network:\n"
 	for i, obj := range n.neurons {
-		if i != 0 {
-			res += ", " + obj.String()
-		} else {
-			res = obj.String()
+		funcStr := ""
+		switch obj.Function {
+		case NEURON_OR:
+			funcStr = "OR"
+		case NEURON_AND:
+			funcStr = "AND"
+		case NEURON_XOR:
+			funcStr = "XOR"
+		}
+		firing := "(not firing)"
+		if obj.Firing() {
+			firing = "(firing)"
+		}
+		res += fmt.Sprintln("  ", i, "-", funcStr, firing)
+		for _, input := range obj.Inputs {
+			idx := 0
+			for j, x := range n.neurons {
+				if x == input.From {
+					idx = j
+					break
+				}
+			}
+			res += fmt.Sprintln("    <-", idx)
 		}
 	}
-	return "Network{" + res + "}"
+	return res + "}"
 }
 
 func (n *Network) indexOf(n1 *Neuron, n2 *Neuron) (int, int) {

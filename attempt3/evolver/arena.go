@@ -82,13 +82,11 @@ func (a *Arena) lifecycle(o *Organism) bool {
 	v := o.health.Value()
 	percentile := a.average.Push(v)
 	
-	live, reproduce := organismDestination(percentile)
-	
+	live, reproduce := a.organismDestination(percentile)
+		
 	if !live {
-		return a.population == 1
-	}
-	
-	if reproduce && a.population < a.maxPopulation {
+		return false
+	} else if reproduce {
 		dup := o.Reproduce()
 		a.waitGroup.Add(1)
 		a.population++
@@ -98,12 +96,18 @@ func (a *Arena) lifecycle(o *Organism) bool {
 	return true
 }
 
-func organismDestination(val float64) (bool, bool) {
+func (a *Arena) organismDestination(val float64) (bool, bool) {
+	if a.population == 1 {
+		return true, true
+	}
 	if val < 0.5 {
 		// No reproduction, but according to probability we might want to keep
 		// the organism alive.
 		return rand.Float64()/2.0 >= val, false
 	} else {
+		if a.population == a.maxPopulation {
+			return true, false
+		}
 		return true, (0.5 + rand.Float64()/2.0) < val
 	}
 }
