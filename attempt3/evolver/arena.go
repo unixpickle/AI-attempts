@@ -24,10 +24,6 @@ type Arena struct {
 
 func NewArena(loopFunc, birthFunc, deathFunc OrganismFunc,
 	          adult, maxPopulation uint64, o *Organism) *Arena {
-	averageSize := int(maxPopulation)
-	if averageSize < 100 {
-		averageSize = 100
-	}
 	a := &Arena{NewAverager(int(maxPopulation) * 10, -10000.0), adult,
 		maxPopulation, loopFunc, deathFunc, birthFunc, sync.RWMutex{},
 		sync.WaitGroup{}, false, 1}
