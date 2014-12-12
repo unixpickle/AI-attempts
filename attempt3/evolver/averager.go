@@ -14,13 +14,23 @@ func NewAverager(count int, start float64) *Averager {
 }
 
 func (a *Averager) Push(value float64) float64 {
-	var sum float64 = 0.0
+	min := 1000000.0
+	max := -1000000.0
 	for i := 0; i < len(a.lastValues) - 1; i++ {
-		a.lastValues[i] = a.lastValues[i + 1]
-		sum += a.lastValues[i]
+		moving := a.lastValues[i + 1]
+		a.lastValues[i] = moving
+		if moving < min {
+			min = moving
+		}
+		if moving > max {
+			max = moving
+		}
 	}
 	a.lastValues[len(a.lastValues)-1] = value
-	sum += value
-	a.average = sum / float64(len(a.lastValues))
-	return a.average
+	if value >= max {
+		return 1.0
+	} else if value <= min {
+		return 0.0
+	}
+	return (value - min) / (max - min)
 }

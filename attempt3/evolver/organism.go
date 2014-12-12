@@ -30,8 +30,8 @@ func (o *Organism) Cycle() {
 	o.health.Cycle()
 }
 
-func (o *Organism) Health() Health {
-	return *o.health
+func (o *Organism) Health() *Health {
+	return o.health.Clone()
 }
 
 func (o *Organism) Pain(value float64) {
