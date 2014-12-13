@@ -9,7 +9,7 @@ func (o *Organism) Reproduce() *Organism {
 	child := o.Clone()
 
 	// Either perform an addition or a deletion.
-	if rand.Intn(2) == 0 {
+	if rand.Intn(7) < 2 {
 		child.MutateAddNeuron()
 	} else {
 		child.MutateRemoveLink()

@@ -31,6 +31,7 @@ func main() {
 }
 
 func Birth(o *evolver.Organism) {
+	fmt.Println("size", o.Len())
 }
 
 func Death(o *evolver.Organism) {
