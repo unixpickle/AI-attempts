@@ -9,10 +9,10 @@ func (o *Organism) Reproduce() *Organism {
 	child := o.Clone()
 
 	// Either perform an addition or a deletion.
-	if rand.Intn(7) < 2 {
+	if rand.Intn(2) == 0 {
 		child.MutateAddNeuron()
 	} else {
-		child.MutateRemoveLink()
+		child.MutateRemoveNeuron()
 		child.MutatePruneNeurons()
 	}
 
@@ -48,21 +48,22 @@ func (o *Organism) MutateAddNeuron() *nnn.Neuron {
 	return neuron
 }
 
-// MutateRemoveLink randomly removes a link from a neural network.
-func (o *Organism) MutateRemoveLink() {
+// MutateRemoveNeuron randomly removes a neuron from a neural network.
+func (o *Organism) MutateRemoveNeuron() {
 	// Generate the full list of links
-	links := make([]*nnn.Link, 0)
+	neurons := make([]*nnn.Neuron, 0)
 	for i := 0; i < o.Len(); i++ {
-		for _, link := range o.Get(i).Inputs {
-			links = append(links, link)
+		neuron := o.Get(i)
+		if !neuron.UserInfo.(bool) {
+			neurons = append(neurons, neuron)
 		}
 	}
-	if len(links) == 0 {
+	if len(neurons) == 0 {
 		return
 	}
 	// Choose a random link and remove it
-	toRemove := rand.Intn(len(links))
-	links[toRemove].Remove()
+	toRemove := rand.Intn(len(neurons))
+	neurons[toRemove].Remove()
 }
 
 // MutatePruneNeurons removes all the neurons in the organism which have no
