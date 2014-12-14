@@ -15,12 +15,8 @@ func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	organism := evolver.NewOrganism()
 	input0 := nnn.NewOrNeuron()
-	input1 := nnn.NewOrNeuron()
-	input2 := nnn.NewOrNeuron()
 	output := nnn.NewOrNeuron()
-	organism.AddPermanent(input0) // set to 1
-	organism.AddPermanent(input1) // set to 0
-	organism.AddPermanent(input2) // get
+	organism.AddPermanent(input0) // set (flip bit)
 	organism.AddPermanent(output) // output
 	organism.UserInfo = false
 	arena = evolver.NewArena(RunMemoryCase, Birth, Death, 2000, 100, organism)
@@ -48,31 +44,25 @@ func RunMemoryCase(o *evolver.Organism) {
 	}
 	// Set should be less likely than get
 	if rand.Intn(3) == 0 {
-		RunSet(o, rand.Intn(2) == 0)
+		RunSet(o)
 	} else {
 		RunGet(o)
 	}
 }
 
-func RunSet(o *evolver.Organism, v bool) {
-	o.UserInfo = v
-	if v {
-		o.Get(0).Fire()
-		o.Get(1).Inhibit()
-	} else {
-		o.Get(1).Fire()
-		o.Get(0).Inhibit()
-	}
+func RunSet(o *evolver.Organism) {
+	o.UserInfo = !o.UserInfo.(bool)
+	o.Get(0).Fire()
 	for i := 0; i < 5; i++ {
 		o.Cycle()
 	}
 }
 
 func RunGet(o *evolver.Organism) {
-	o.Get(2).Fire()
-	// Wait for an output on the output neuron
+	// Wait for an output
 	for i := 0; i < 5; i++ {
-		if o.Get(3).Firing() {
+		o.Cycle()
+		if o.Get(1).Firing() {
 			if o.UserInfo.(bool) {
 				o.Pain(-0.01)
 				return
@@ -82,7 +72,7 @@ func RunGet(o *evolver.Organism) {
 			}
 		}
 	}
-	if o.UserInfo.(bool) {
+	if !o.UserInfo.(bool) {
 		o.Pain(-0.01)
 	} else {
 		o.Pain(1.0)
