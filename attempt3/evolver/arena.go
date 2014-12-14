@@ -9,9 +9,9 @@ import (
 type OrganismFunc func(o *Organism)
 
 type Arena struct {
-	average       *Averager
+	fitness       *Fitness
 	adultAge      uint64
-	maxPopulation uint64
+	maxPopulation int
 	loopFunc      OrganismFunc
 	deathFunc     OrganismFunc
 	birthFunc     OrganismFunc
@@ -19,20 +19,20 @@ type Arena struct {
 	mutex        sync.RWMutex
 	waitGroup    sync.WaitGroup
 	stopped      bool
-	population   uint64
+	population   int
 }
 
 func NewArena(loopFunc, birthFunc, deathFunc OrganismFunc,
-	          adult, maxPopulation uint64, o *Organism) *Arena {
-	a := &Arena{NewAverager(int(maxPopulation) * 10, -10000.0), adult,
-		maxPopulation, loopFunc, deathFunc, birthFunc, sync.RWMutex{},
+	          adult uint64, maxPopulation int, o *Organism) *Arena {
+	a := &Arena{NewFitness(maxPopulation), adult, maxPopulation,
+		loopFunc, deathFunc, birthFunc, sync.RWMutex{},
 		sync.WaitGroup{}, false, 1}
 	a.waitGroup.Add(1)
 	go a.organismLoop(o)
 	return a
 }
 
-func (a *Arena) Population() uint64 {
+func (a *Arena) Population() int {
 	a.mutex.RLock()
 	defer a.mutex.RUnlock()
 	return a.population
@@ -50,16 +50,20 @@ func (a *Arena) Stop() {
 
 func (a *Arena) organismLoop(o *Organism) {
 	defer a.waitGroup.Done()
+	a.mutex.Lock()
+	identifier := a.fitness.Alloc()
+	a.mutex.Unlock()
 	
 	a.birthFunc(o)
 	for {
 		// Perform a single lifecycle
 		a.loopFunc(o)
 		a.mutex.Lock()
-		keep := a.lifecycle(o)
+		keep := a.lifecycle(o, identifier)
 		if !keep {
 			a.deathFunc(o)
 			a.population--
+			a.fitness.Free(identifier)
 			a.mutex.Unlock()
 			return
 		}
@@ -68,7 +72,7 @@ func (a *Arena) organismLoop(o *Organism) {
 	}
 }
 
-func (a *Arena) lifecycle(o *Organism) bool {
+func (a *Arena) lifecycle(o *Organism, id int) bool {
 	if a.stopped {
 		return false
 	} else if o.health.Cycles < a.adultAge {
@@ -76,7 +80,7 @@ func (a *Arena) lifecycle(o *Organism) bool {
 	}
 	
 	v := o.health.Value()
-	percentile := a.average.Push(v)
+	percentile := a.fitness.Percentile(id, v)
 	
 	live, reproduce := a.organismDestination(percentile)
 		

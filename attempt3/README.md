@@ -27,3 +27,13 @@ Additionally, I am questioning my evolution model. Adding neurons is much more l
 In my next model, I will probably track the fitness of every organism simultaneously and exactly. This way, I will be sure that the fittest organism is NEVER killed off.
 
 I may modify this model so that deletion mutations occur on a neuron rather than on a link. This may fix the issue of unwanted growth.
+
+## Update
+
+I have performed two changes.
+
+The first change is in the nature of mutations. Now, multiple mutations can happen (although the odds of n permutations are 1/3^(n-1)). A mutation can now either be an addition or a deletion of a neuron--no more deleting links.
+
+The second change is in the nature of fitness. Now, the fitness of every organism is tracked live and compared completely fairly. This means that the fittest organism will *never* die and has a 100% chance of reproducing. While this sometimes means that the goal organism won't come about as quickly, it also ensures that the current cutting edge neural structure will be protected.
+
+Now, it would seem that a good XOR circuit eventually turns up, although it does sometimes take a lot of time.

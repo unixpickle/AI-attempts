@@ -9,11 +9,17 @@ func (o *Organism) Reproduce() *Organism {
 	child := o.Clone()
 
 	// Either perform an addition or a deletion.
-	if rand.Intn(2) == 0 {
-		child.MutateAddNeuron()
-	} else {
-		child.MutateRemoveNeuron()
-		child.MutatePruneNeurons()
+	for {
+		if rand.Intn(2) == 0 {
+			child.MutateAddNeuron()
+		} else {
+			child.MutateRemoveNeuron()
+			child.MutatePruneNeurons()
+		}
+		// 1/3^n are the odds that it will perform n+1 mutations.
+		if rand.Intn(3) != 0 {
+			break
+		}
 	}
 
 	// Stop all neural signals and reset the organism's health
