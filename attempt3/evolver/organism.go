@@ -4,11 +4,12 @@ import "github.com/unixpickle/AI-attempts/attempt2/nnn"
 
 type Organism struct {
 	*nnn.Network
-	health *Health
+	health   *Health
+	UserInfo interface{}
 }
 
 func NewOrganism() *Organism {
-	return &Organism{nnn.NewNetwork(), NewHealth()}
+	return &Organism{nnn.NewNetwork(), NewHealth(), nil}
 }
 
 func (o *Organism) Add(n *nnn.Neuron) {
@@ -22,7 +23,7 @@ func (o *Organism) AddPermanent(n *nnn.Neuron) {
 }
 
 func (o *Organism) Clone() *Organism {
-	return &Organism{o.Network.Clone(), o.health.Clone()}
+	return &Organism{o.Network.Clone(), o.health.Clone(), o.UserInfo}
 }
 
 func (o *Organism) Cycle() {
