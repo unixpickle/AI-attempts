@@ -9,7 +9,7 @@ import (
 )
 
 const DIGITS = 2
-const MAXAGE = 2000
+const MAXAGE = 3000
 
 var bestOrganism *evolver.Organism
 var arena *evolver.Arena
@@ -32,7 +32,7 @@ func main() {
 }
 
 func Birth(o *evolver.Organism) {
-	o.UserInfo = []int64{0, 0}
+	o.UserInfo = map[string]int64{}
 }
 
 func Death(o *evolver.Organism) {
@@ -54,10 +54,12 @@ func RunAddCase(o *evolver.Organism) {
 	in2 := rand.Intn(1 << DIGITS)
 	out := (in1 + in2) % (1 << DIGITS)
 	success := RunCase(o, in1, in2, out)
-	list := o.UserInfo.([]int64)
-	list[1]++
+	m := o.UserInfo.(map[string]int64)
+	str := fmt.Sprintf("%d+%d", in1, in2)
 	if success {
-		list[0]++
+		m[str]++
+	} else {
+		m[str]--
 	}
 }
 
