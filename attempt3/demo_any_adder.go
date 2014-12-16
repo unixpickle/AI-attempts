@@ -9,9 +9,11 @@ import (
 )
 
 const DIGITS = 2
+const MAXAGE = 2000
 
 var bestOrganism *evolver.Organism
 var arena *evolver.Arena
+var highestHealth float64 = -1000.0
 
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
@@ -19,7 +21,7 @@ func main() {
 	for i := 0; i < DIGITS * 3; i++ {
 		organism.AddPermanent(nnn.NewOrNeuron())
 	}
-	arena = evolver.NewArena(RunAddCase, Birth, Death, 1000, 100, organism)
+	arena = evolver.NewArena(RunAddCase, Birth, Death, MAXAGE, 100, organism)
 	arena.Wait()
 	if bestOrganism == nil {
 		fmt.Println("Did not get a good organism.")
@@ -30,24 +32,36 @@ func main() {
 }
 
 func Birth(o *evolver.Organism) {
+	o.UserInfo = []int64{0, 0}
 }
 
 func Death(o *evolver.Organism) {
 }
 
 func RunAddCase(o *evolver.Organism) {
-	if o.Health().Cycles > 1000 && o.Health().Value() > 0.0 {
-		bestOrganism = o
-		arena.Stop()
-		return
+	if o.Health().Cycles > MAXAGE {
+		if o.Health().Value() > 0.0 {
+			bestOrganism = o
+			arena.Stop()
+			return
+		} else if o.Health().Value() > highestHealth {
+			highestHealth = o.Health().Value()
+			fmt.Println("New highest health:", highestHealth, "-- successes",
+				o.UserInfo)
+		}
 	}
 	in1 := rand.Intn(1 << DIGITS)
 	in2 := rand.Intn(1 << DIGITS)
 	out := (in1 + in2) % (1 << DIGITS)
-	RunCase(o, in1, in2, out)
+	success := RunCase(o, in1, in2, out)
+	list := o.UserInfo.([]int64)
+	list[1]++
+	if success {
+		list[0]++
+	}
 }
 
-func RunCase(o *evolver.Organism, a, b, out int) {
+func RunCase(o *evolver.Organism, a, b, out int) bool {
 	for i := 0; i < DIGITS; i++ {
 		mask := 1 << uint(i)
 		if 0 != (a & mask) {
@@ -61,7 +75,7 @@ func RunCase(o *evolver.Organism, a, b, out int) {
 			o.Get(i + DIGITS).Inhibit()
 		}
 	}
-	handleEnd := func() {
+	handleEnd := func() bool {
 		// Compare the circuit's output to the given input
 		pain := -0.01
 		for i := 0; i < DIGITS; i++ {
@@ -71,15 +85,15 @@ func RunCase(o *evolver.Organism, a, b, out int) {
 			}
 		}
 		o.Pain(pain)
+		return pain < 0.0
 	}
 	for i := 0; i < 5; i++ {
 		o.Cycle()
 		for j := 0; j < DIGITS; j++ {
 			if o.Get(j + 2 * DIGITS).Firing() {
-				handleEnd()
-				return
+				return handleEnd()
 			}
 		}
 	}
-	handleEnd()
+	return handleEnd()
 }
