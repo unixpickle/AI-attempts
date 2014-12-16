@@ -55,7 +55,7 @@ func RunAddCase(o *evolver.Organism) {
 	out := (in1 + in2) % (1 << DIGITS)
 	success := RunCase(o, in1, in2, out)
 	m := o.UserInfo.(map[string]int64)
-	str := fmt.Sprintf("%d+%d", in1, in2)
+	str := fmt.Sprintf("%d+%d=%d", in1, in2, out)
 	if success {
 		m[str]++
 	} else {
