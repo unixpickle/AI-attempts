@@ -37,3 +37,7 @@ The first change is in the nature of mutations. Now, multiple mutations can happ
 The second change is in the nature of fitness. Now, the fitness of every organism is tracked live and compared completely fairly. This means that the fittest organism will *never* die and has a 100% chance of reproducing. While this sometimes means that the goal organism won't come about as quickly, it also ensures that the current cutting edge neural structure will be protected.
 
 Now, it would seem that a good XOR circuit eventually turns up, although it does sometimes take a lot of time.
+
+## Update 2
+
+I am working on evolving a 2-digit adder. Now, the issue is delay: at first it evolves a nice network to perform addition of *most* cases. However, in order to do all cases, it takes two cycles, not one, and it is difficult for the entire network to evolve to delay itself by one extra cycle.
