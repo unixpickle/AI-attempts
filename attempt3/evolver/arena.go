@@ -100,6 +100,12 @@ func (a *Arena) organismDestination(val float64) (bool, bool) {
 	if a.population == 1 {
 		return true, true
 	}
+	res := rand.Float64() <= val
+	if a.population == a.maxPopulation {
+		return res, false
+	}
+	return res, res
+	/*
 	if val < 0.5 {
 		// No reproduction, but according to probability we might want to keep
 		// the organism alive.
@@ -110,4 +116,5 @@ func (a *Arena) organismDestination(val float64) (bool, bool) {
 		}
 		return true, (0.5 + rand.Float64()/2.0) < val
 	}
+	*/
 }
