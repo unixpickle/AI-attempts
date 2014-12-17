@@ -41,3 +41,5 @@ Now, it would seem that a good XOR circuit eventually turns up, although it does
 ## Update 2
 
 I am working on evolving a 2-digit adder. Now, the issue is delay: at first it evolves a nice network to perform addition of *most* cases. However, in order to do all cases, it takes two cycles, not one, and it is difficult for the entire network to evolve to delay itself by one extra cycle.
+
+**UPDATE**: I think to do this, I will make it possible for new neurons to be inserted in the middle of existing links.
