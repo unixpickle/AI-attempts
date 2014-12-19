@@ -89,13 +89,8 @@ func RunCase(o *evolver.Organism, a, b, out int) bool {
 		o.Pain(pain)
 		return pain < 0.0
 	}
-	for i := 0; i < 5; i++ {
+	for i := 0; i < 2; i++ {
 		o.Cycle()
-		for j := 0; j < DIGITS; j++ {
-			if o.Get(j + 2 * DIGITS).Firing() {
-				return handleEnd()
-			}
-		}
 	}
 	return handleEnd()
 }
