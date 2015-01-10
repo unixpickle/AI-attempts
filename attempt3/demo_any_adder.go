@@ -19,7 +19,7 @@ func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	organism := evolver.NewOrganism()
 	for i := 0; i < DIGITS * 3; i++ {
-		organism.AddPermanent(nnn.NewOrNeuron())
+		organism.AddPermanent(nnn.NewXorNeuron())
 	}
 	arena = evolver.NewArena(RunAddCase, Birth, Death, MAXAGE, 100, organism)
 	arena.Wait()
@@ -89,7 +89,7 @@ func RunCase(o *evolver.Organism, a, b, out int) bool {
 		o.Pain(pain)
 		return pain < 0.0
 	}
-	for i := 0; i < 2; i++ {
+	for i := 0; i < 3; i++ {
 		o.Cycle()
 	}
 	return handleEnd()
