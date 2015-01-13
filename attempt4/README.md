@@ -6,8 +6,8 @@ I will use selection to breed organisms which do increasingly well at various ta
 
 ## Motivation
 
-A problem with my last two attempts was that circuits did not evolve to be more and more complex. Rather, a circuit would evolve to solve a subset of the problem too fast. These circuits were unlikely to produce children which solved the *entire* problem; such feat would usually involve a slower intermediate step wherein the organism did not improve but rather slowed down.
+A problem with my last two attempts was that circuits did not evolve to be more and more complex. Rather, a circuit would evolve to solve a subset of the problem too fast. These circuits were unlikely to produce children which solved the *entire* problem; such an occurance would usually involve a slower intermediate step wherein the organism did not improve but rather slowed down.
 
-One approach to fixing the above may be sexual reproduction. This is a path I am considering, but I think I'll have to learn some graph theory before I can do it.
+One approach to fixing the problem described above may be sexual reproduction. This is a path I am considering, but I think I'll have to learn some graph theory before I can do it.
 
-In the meantime, I think removing OR neurons will simplify networks and make inhibition easier. Inhibition will allow a simple network to solve a subset of the problem even though it is inhibited when a different subset is needed.
+In the meantime, I think removing OR neurons will simplify networks and make inhibition easier. Inhibition will allow a partial solution to inhibit a different partial solution depending on the input.
