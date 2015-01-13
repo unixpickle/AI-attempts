@@ -5,42 +5,42 @@ import (
 )
 
 // Mutate performs one random insertion or deletion on a network.
-// The input network may be modified as a result of the mutation, similarly to
-// the append() builtin.
-func Mutate(n Network) Network {
+// The input network will not be modified as a result of the mutation.
+func Mutate(rawInput Network) Network {
+	n := rawInput.Clone()
+
 	if len(n) == 0 {
-		return AddRandomNode(n)
+		return addRandomNode(n)
 	}
 
 	// 0 = add node, 1 = add link, 2 = remove node, 3 = remove link
 	var operation int
 	num := rand.Float64()
-	if CanDeleteLink(n) && CanDeleteNode(n) {
+	if canDeleteLink(n) && canDeleteNode(n) {
 		operation = int(num / 4.0)
-	} else if CanDeleteLink(n) {
+	} else if canDeleteLink(n) {
 		operation = int(num / 3.0)
 		if operation == 3 {
 			operation = 4
 		}
-	} else if CanDeleteNode(n) {
+	} else if canDeleteNode(n) {
 		operation = int(num / 3.0)
 	} else {
 		operation = int(num / 2.0)
 	}
 
 	if operation == 0 {
-		return AddRandomNode(n)
+		return addRandomNode(n)
 	} else if operation == 1 {
-		return AddRandomLink(n)
+		return addRandomLink(n)
 	} else if operation == 2 {
-		return RemoveRandomNode(n)
+		return removeRandomNode(n)
 	} else {
-		return RemoveRandomLink(n)
+		return removeRandomLink(n)
 	}
 }
 
-// AddRandomLink generates a single link in the network.
-func AddRandomLink(n Network) Network {
+func addRandomLink(n Network) Network {
 	length := len(n)
 
 	// Cannot add a link to an empty network
@@ -55,9 +55,7 @@ func AddRandomLink(n Network) Network {
 	return n
 }
 
-// AddRandomNode generates a node and adds it to the network.
-// The new node will be connected semi-randomly to other nodes in the network.
-func AddRandomNode(n Network) Network {
+func addRandomNode(n Network) Network {
 	oldLen := len(n)
 
 	// Add zero, one, or two random inputs.
@@ -77,7 +75,7 @@ func AddRandomNode(n Network) Network {
 	}
 
 	if oldLen != 0 {
-		// Add a random output
+		// Add a random output.
 		output := rand.Intn(oldLen)
 		n[output].Inputs = append(n[output].Inputs, oldLen)
 	}
@@ -86,8 +84,7 @@ func AddRandomNode(n Network) Network {
 	return append(n, node)
 }
 
-// CanDeleteLink determines if a network has any inter-node connections.
-func CanDeleteLink(n Network) bool {
+func canDeleteLink(n Network) bool {
 	for _, x := range n {
 		if len(x.Inputs) > 0 {
 			return true
@@ -96,12 +93,79 @@ func CanDeleteLink(n Network) bool {
 	return false
 }
 
-// CanDeleteNode determines if a network has any non-permanent nodes.
-func CanDeleteNode(n Network) bool {
+func canDeleteNode(n Network) bool {
 	for _, x := range n {
 		if !x.Permanent {
 			return true
 		}
 	}
 	return false
+}
+
+func removeNode(n Network, idx int) Network {
+	// Remove the node.
+	res := n
+	copy(res[idx:], res[idx+1:])
+	res = res[0 : len(res)-1]
+
+	// Subtract or delete appropriate input indexes.
+	// TODO: make this more efficient.
+	for i := 0; i < len(res); i++ {
+		newInputs := make([]int, 0, len(res[i].Inputs))
+		for _, input := range res[i].Inputs {
+			if input == idx {
+				continue
+			} else if input > idx {
+				newInputs = append(newInputs, input-1)
+			} else {
+				newInputs = append(newInputs, input)
+			}
+		}
+		res[i].Inputs = newInputs
+	}
+
+	return res
+}
+
+func removeRandomLink(n Network) Network {
+	// Gather a list of links so we can pick one randomly.
+	links := make([]linkInfo, 0)
+	for i, x := range n {
+		for j, _ := range x.Inputs {
+			link := linkInfo{i, j}
+			links = append(links, link)
+		}
+	}
+
+	// No links means no mutation.
+	if len(links) == 0 {
+		return n
+	}
+
+	// Remove the link entry
+	rem := links[rand.Intn(len(links))]
+	node := &n[rem.owner]
+	node.Inputs[rem.idx] = node.Inputs[len(node.Inputs)-1]
+	node.Inputs = node.Inputs[0 : len(node.Inputs)-1]
+
+	return n
+}
+
+func removeRandomNode(n Network) Network {
+	// Create a list of indexes for non-permanent nodes.
+	nonPerm := make([]int, 0, len(n))
+	for i, x := range n {
+		if !x.Permanent {
+			nonPerm = append(nonPerm, i)
+		}
+	}
+
+	// Pick a node to delete
+	idx := nonPerm[rand.Intn(len(nonPerm))]
+	return removeNode(n, idx)
+}
+
+type linkInfo struct {
+	owner int
+	idx   int
 }
