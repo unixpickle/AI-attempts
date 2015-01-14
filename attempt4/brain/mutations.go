@@ -15,18 +15,17 @@ func Mutate(rawInput Network) Network {
 
 	// 0 = add node, 1 = add link, 2 = remove node, 3 = remove link
 	var operation int
-	num := rand.Float64()
 	if canDeleteLink(n) && canDeleteNode(n) {
-		operation = int(num / 4.0)
+		operation = rand.Intn(4)
 	} else if canDeleteLink(n) {
-		operation = int(num / 3.0)
-		if operation == 3 {
-			operation = 4
+		operation = rand.Intn(3)
+		if operation == 2 {
+			operation = 3
 		}
 	} else if canDeleteNode(n) {
-		operation = int(num / 3.0)
+		operation = rand.Intn(3)
 	} else {
-		operation = int(num / 2.0)
+		operation = rand.Intn(2)
 	}
 
 	if operation == 0 {
@@ -102,7 +101,7 @@ func canDeleteNode(n Network) bool {
 	return false
 }
 
-func removeNode(n Network, idx int) Network {
+func removeNode(n Network, idx int) Network {	
 	// Remove the node.
 	res := n
 	copy(res[idx:], res[idx+1:])
