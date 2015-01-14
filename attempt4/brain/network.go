@@ -1,5 +1,9 @@
 package brain
 
+import (
+	"fmt"
+)
+
 const (
 	NodeTypeAND = 0
 	NodeTypeXOR = 1
@@ -17,6 +21,22 @@ func (n Network) Clone() Network {
 		res[i] = Node{x.Type, x.Permanent, inputsCopy}
 	}
 	return res
+}
+
+// String makes a beautiful human-readable string from the network.
+func (n Network) String() string {
+	res := "{Network:\n"
+	for i, obj := range n {
+		funcStr := "AND"
+		if obj.Type == NodeTypeXOR {
+			funcStr = "XOR"
+		}
+		res += fmt.Sprintln("  ", i, "-", funcStr)
+		for _, input := range obj.Inputs {
+			res += fmt.Sprintln("    <-", input)
+		}
+	}
+	return res + "}"
 }
 
 // A Node is a typed node in a graph.

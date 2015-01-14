@@ -5,7 +5,7 @@ import (
 	"github.com/unixpickle/AI-attempts/attempt4/evolution"
 )
 
-func Solve(box BlackBox, sampleCount int) *Organism {
+func Solve(box BlackBox, sampleCount int) brain.Network {
 	// Create a new network with inputs and outputs.
 	network := brain.Network{}
 	for i := 0; i < box.AnswerLen()+box.QuestionLen(); i++ {
@@ -26,5 +26,5 @@ func Solve(box BlackBox, sampleCount int) *Organism {
 		arena.Step()
 	}
 
-	return solution
+	return solution.brain.Network()
 }
