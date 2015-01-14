@@ -24,9 +24,9 @@ func (b Brain) Cycle() {
 	// Calculate each neuron's new state
 	for i, x := range b.network {
 		if x.Type == NodeTypeAND {
-			b.temp[i] = b.performXOR(x)
-		} else {
 			b.temp[i] = b.performAND(x)
+		} else {
+			b.temp[i] = b.performXOR(x)
 		}
 	}
 
@@ -45,6 +45,9 @@ func (b Brain) Network() Network {
 }
 
 func (b Brain) performAND(n Node) bool {
+	if len(n.Inputs) == 0 {
+		return false
+	}
 	for _, input := range n.Inputs {
 		if !b.activity[input] {
 			return false

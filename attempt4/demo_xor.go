@@ -19,11 +19,11 @@ func (b Box) Ask(last interface{}) ([]bool, interface{}) {
 }
 
 func (b Box) Check(answer []bool, last interface{}) (bool, interface{}) {
-	return answer[0] == last.(bool), nil
+	return answer[0] == last.(bool), last
 }
 
 func (b Box) Initial() interface{} {
-	return nil
+	return false
 }
 
 func (b Box) QuestionLen() int {
