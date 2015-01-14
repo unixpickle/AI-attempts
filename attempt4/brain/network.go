@@ -5,16 +5,6 @@ const (
 	NodeTypeXOR = 1
 )
 
-// A Node is a typed node in a graph.
-// Nodes store information about their inputs.
-// Nodes may be marked as "permanent" if they should not be deleted across
-// evolution cycles.
-type Node struct {
-	Type      int
-	Permanent bool
-	Inputs    []int
-}
-
 // A network is an ordered list of nodes.
 type Network []Node
 
@@ -27,4 +17,14 @@ func (n Network) Clone() Network {
 		res[i] = Node{x.Type, x.Permanent, inputsCopy}
 	}
 	return res
+}
+
+// A Node is a typed node in a graph.
+// Nodes store information about their inputs.
+// Nodes may be marked as "permanent" if they should not be deleted across
+// evolution cycles.
+type Node struct {
+	Type      int
+	Permanent bool
+	Inputs    []int
 }

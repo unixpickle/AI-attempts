@@ -5,7 +5,6 @@ type Organism interface {
 	Adult() bool
 	Die()
 	Fitness() float64
-	Old() bool
 	Reproduce() Organism
 	Step()
 }
