@@ -73,7 +73,7 @@ func main() {
 	}
 	rand.Seed(time.Now().UTC().UnixNano())
 	fmt.Println("Solving...")
-	sampleCount := 128 << uint(inSize*2)
+	sampleCount := 32 << uint(inSize*2)
 	n := solve.Solve(Box{uint(inSize), uint(outSize)}, sampleCount)
 	fmt.Println("Solved:\n", n)
 }
