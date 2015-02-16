@@ -24,22 +24,29 @@ NOTE: The runtime won't really be "bytecode". However, it will consists of a ser
 
 ## Subroutines and addresses.
 
-**Subroutines** are logical units of "memory" which contain zero or more instructions. Each instruction has a **memory address**. Memory addresses are ordered pairs: a subroutine and an index withoun the subroutine. A subroutine is not *numerically addressed*&mdash;that is, it does not have a numerical identifier. Rather, subroutines can only be referenced by copying existing references. However, instructions within a subroutine are indexed, and these indexes can be incremented and decremented as numbers.
+**Subroutines** are logical units of "memory" which contain zero or more instructions. Each instruction has a **memory address**. Memory addresses coordinates&mdash;ordered pairs of the form (subroutine, index). A subroutine is not *numerically addressed*&mdash;that is, it does not have a numerical identifier. Rather, subroutines can only be referenced by copying existing references. However, instructions within a subroutine are indexed, and these indexes can be incremented and decremented as numbers.
 
 ## Instructions
 
-Each instruction takes one argument. Every argument is a memory address.
+Each instruction takes one argument. Every argument is a memory address. Note that a subroutine can only run once at a time, so any calls to a running subroutine will be ignored.
 
-This section will be kind of like library documentation. I will denote each instruction as "name(argument1)" or "name(argument1, argument2)". I will try to give the arguments meaningful names.
+This section will be kind of like library documentation. I will denote each instruction as "name(argument)". I will try to give the arguments meaningful names.
 
  * nop(unused) - This does nothing. This can be used to store an address for use somewhere else.
- * jump(address) - Move our execution to a different address.
+ * jmp(address) - Move the execution to a different address.
  * call(address) - Concurrently run a different address.
- * callback(output) - Get the address of the current instruction, add 2 to its instruction index, and set the result as the argument of the instruction indexed by "output".
+ * callback(output) - Get the address of the current instruction, add 2 to its instruction index, and set the result as the argument of the instruction at "output".
  * inc(instruction) - This increments the instruction index of the argument of "instruction".
  * dinc(instruction) - This is equivalent to running inc(instruction) twice.
  * dec(instruction) - This decrements the instruction index of the argument of "instruction"
- * eq(compare) - This loads the argument of the next instruction. If that argument is equal to "compare", this changes the instruction after the next instruction to be a "jump". Otherwise, this changes said instruction to be a "nop".
- * setinst(address) - This sets the instruction at "address" to the instruction after the next instruction; it does not change the argument at "address", only the instruction.
+ * eq(compare) - This looks the argument of the next instruction. If that argument is equal to "compare", this changes the instruction after the next instruction to be a "jmp". Otherwise, this changes said instruction to be a "nop". This does not affect any arguments, only the instruction itself.
+ * setinst(address) - This sets the instruction at "address" to the instruction after the next instruction. It does not change the argument at "address", only the instruction.
+ * getinst(address) - This sets the instruction after the next one to the instruction at "address". It does not change the argument, only the instruction.
+ * setarg(address) - This sets the argument at "address" to the argument of next instruction.
+ * getarg(address) - This sets the argument of the next instruction to be the argument at "address"
+ * beginning(address) - This sets the instruction index of the argument at "address" to 0.
+ * create(address) - This creates a new subroutine. It sets the argument at "address" to equal the coordinate (s, 0), where s is the new subroutine.
+ * halt(unused) - This stops executing the current subroutine. It is basically a "return" statement, but there is nowhere no return to.
+ * copy(address) - This performs an indirection in the form of a "set" operation. It puts the argument at "address" into the argument of the address which is the argument of the next instruction.
 
-I have to check if this instruction set is Turing complete before I move on.
+**Update:** I have drafted a NAND gate in this bytecode. In addition, I have created an addition circuit. Thus, I think it's pretty safe to say that the language is Turing complete.

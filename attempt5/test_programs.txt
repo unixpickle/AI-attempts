@@ -1,0 +1,81 @@
+###########################################################
+#                         SYNTAX                          #
+###########################################################
+# The "#" denotes a comment                               #
+# "someText:" defines a subroutine                        #
+# ".someText:" defines a human-readable instruction index #
+# "instruction ARG" runs an instruction                   #
+############################################################
+
+# The first instruction takes the first operand
+# The second instruction takes the second operand
+# The third instruction will have the result
+# The fourth instruction contains the address to call back to on completion
+addNumbers:
+  .zero:
+  .arg1: nop .zero
+  .arg2: nop .zero
+  .res:  nop .zero
+  .cb:   nop .zero
+  
+  setarg .res
+  nop .zero
+  
+  .loop1:
+  # if (arg1==0) { jmp .loop1; } else { inc .res; dec .arg1 }
+  getarg .arg1
+  eq .zero
+  nop .zero
+  jmp .loop2
+  inc .res
+  dec .arg1
+  
+  .loop2:
+  # if (arg2==0) { jmp .return; } else { inc .res; dec .arg2 }
+  getarg .arg2
+  eq .zero
+  nop .zero
+  jmp .return
+  inc .res
+  dec .arg2
+  
+  .return:
+  getarg .cb
+  jmp .zero
+
+# For the first and second operands, an instruction index of 0 is "false".
+# The first instruction is the first operand.
+# The second instruction is the second operand.
+# The third instruction is the address to jmp to if !op1 || !op2.
+# The fourth instruction is the address to jmp to if op1 && op2.
+nand:
+  .first: nop .null
+  .second: nop .null
+  .truecb: nop .null
+  .falsecb: nop .null
+
+  # Check if the first argument was false.
+  copy .first
+  nop .zero1
+  beginning .zero1
+  getarg .first
+  eq .null
+  .zero1: nop .null
+  jmp .true
+  
+  # Check if the second argument was false
+  copy .second
+  nop .zero2
+  beginning .zero2
+  getarg .second
+  eq .null
+  .zero2: nop .null
+  jmp .true
+  
+  .false:
+  getarg .falsecb
+  jmp .null
+  
+  .true:
+  getarg .truecb
+  jmp .null
