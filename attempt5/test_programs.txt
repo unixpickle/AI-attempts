@@ -5,7 +5,7 @@
 # "someText:" defines a subroutine                        #
 # ".someText:" defines a human-readable instruction index #
 # "instruction ARG" runs an instruction                   #
-############################################################
+###########################################################
 
 # The first instruction takes the first operand
 # The second instruction takes the second operand

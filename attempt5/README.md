@@ -1,5 +1,7 @@
 # Self-modifying code
 
+**This attempt was over before it even started.** Maybe I will come back to it some other time, but for now I am abandoning it.
+
 I am going to attempt to make a programming language which is ideal for self-modifying, interconnected, and parallelized code.
 
 After I create a runtime, I will create a few artificial "brains". I will start by making simple programs which modify themselves in predictable ways to learn simple tasks. Once I demonstrate that this works, I will try to create a more advanced program which will have human-like capabilities such as short-term memory, image processing, etc.
@@ -24,7 +26,7 @@ NOTE: The runtime won't really be "bytecode". However, it will consists of a ser
 
 ## Subroutines and addresses.
 
-**Subroutines** are logical units of "memory" which contain zero or more instructions. Each instruction has a **memory address**. Memory addresses coordinates&mdash;ordered pairs of the form (subroutine, index). A subroutine is not *numerically addressed*&mdash;that is, it does not have a numerical identifier. Rather, subroutines can only be referenced by copying existing references. However, instructions within a subroutine are indexed, and these indexes can be incremented and decremented as numbers.
+**Subroutines** are logical units of "memory" which contain zero or more instructions. Each instruction has a **memory address**. Memory addresses are coordinates&mdash;ordered pairs of the form (subroutine, index). A subroutine is not *numerically addressed*&mdash;that is, it does not have a numerical identifier. Rather, subroutines can only be referenced by copying existing references. However, instructions within a subroutine are indexed, and these indexes can be incremented and decremented as numbers.
 
 ## Instructions
 
